@@ -25,7 +25,7 @@ const ITunesPage: FC = () => {
         );
         setLoading(false);
       })
-      .catch(() => { // В случае ошибки используем mock данные, фильтруем по имени
+      .catch(() => { // В случае ошибки используем mock данные, фильтруем по имениb
         setMusic(
           SONGS_MOCK.results.filter((item) =>
             item.collectionCensoredName
