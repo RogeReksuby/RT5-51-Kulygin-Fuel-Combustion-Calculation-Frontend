@@ -8,7 +8,7 @@ export const FUELS_MOCK: Fuel[] = [
     heat: 35.0,
     molar_mass: 16.04,
     density: 0.68,
-    card_image: "http://127.0.0.1:9000/ripimages/gas.jpg",
+    card_image: defaultImage,
     short_desc: "Основной компонент - метан",
     full_desc: "Природный газ состоит преимущественно из метана...",
     is_gas: true,

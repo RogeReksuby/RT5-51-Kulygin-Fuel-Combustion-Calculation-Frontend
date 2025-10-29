@@ -1,0 +1,106 @@
+.homeContent {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.homeDescription {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.homeDescription h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.descriptionSection {
+  margin-bottom: 40px;
+}
+
+.descriptionSection h2 {
+  color: #34495e;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.descriptionSection p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+}
+
+.featuresList li {
+  padding: 12px 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.fuelTypes {
+  display: grid;
+  gap: 15px;
+}
+
+.fuelTypeItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #3498db;
+}
+
+.instructionsList {
+  padding-left: 20px;
+}
+
+.instructionsList li {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.actionSection {
+  text-align: center;
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid #ecf0f1;
+}
+
+.largeButton {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .homeContent {
+    padding: 20px 10px;
+  }
+  
+  .homeDescription {
+    padding: 20px;
+  }
+  
+  .homeDescription h1 {
+    font-size: 2rem;
+  }
+  
+  .fuelTypeItem {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

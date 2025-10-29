@@ -6,12 +6,22 @@ const API_BASE = '/api';
 export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
   try {
     const queryParams = new URLSearchParams();
-    if (filters?.searchQuery) queryParams.append('search', filters.searchQuery);
+    if (filters?.searchQuery) queryParams.append('title', filters.searchQuery);
     
-    const response = await fetch(`${API_BASE}/fuels?${queryParams}`);
+    // Добавьте /api/ обратно в путь
+    const response = await fetch(`/api/fuels?${queryParams}`);
     
     if (!response.ok) throw new Error('API request failed');
-    return await response.json();
+    
+    const result = await response.json();
+    
+    // Теперь правильно извлекаем данные из поля "data"
+    if (result && Array.isArray(result.data)) {
+      return result.data;
+    } else {
+      console.warn('Unexpected API response format, using mock data');
+      return filterMockFuels(FUELS_MOCK, filters);
+    }
   } catch (error) {
     console.warn('Using mock data due to API error:', error);
     return filterMockFuels(FUELS_MOCK, filters);
@@ -20,9 +30,10 @@ export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
 
 export const getFuelById = async (id: number): Promise<Fuel> => {
   try {
-    const response = await fetch(`${API_BASE}/fuels/${id}`);
+    const response = await fetch(`/api/fuels/${id}`);
     if (!response.ok) throw new Error('API request failed');
-    return await response.json();
+    const result = await response.json();
+    return result.data; // Извлекаем из поля data
   } catch (error) {
     console.warn('Using mock data due to API error:', error);
     return FUELS_MOCK.find(fuel => fuel.id === id) || FUELS_MOCK[0];

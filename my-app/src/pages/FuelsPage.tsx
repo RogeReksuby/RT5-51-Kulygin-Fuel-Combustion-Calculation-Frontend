@@ -22,13 +22,19 @@ const FuelsPage: FC = () => {
     loadCartCount();
   }, []);
 
-  const loadFuels = async () => {
-    setLoading(true);
+const loadFuels = async () => {
+  setLoading(true);
+  try {
     const filters = searchValue ? { searchQuery: searchValue } : undefined;
     const data = await getFuels(filters);
-    setFuels(data);
+    setFuels(data); // data теперь точно массив
+  } catch (error) {
+    console.error('Error loading fuels:', error);
+    setFuels([]);
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   const loadCartCount = async () => {
     const count = await getCombustionCartCount();
