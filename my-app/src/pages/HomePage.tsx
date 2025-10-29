@@ -13,9 +13,7 @@ export const HomePage: FC = () => {
             Добро пожаловать в Itunes Music! Здесь вы можете найти музыку на
             любой вкус.
           </p>
-          <Link to={ROUTES.ALBUMS}>
-            <Button variant="primary">Просмотреть музыку</Button>
-          </Link>
+
         </Col>
       </Row>
     </Container>

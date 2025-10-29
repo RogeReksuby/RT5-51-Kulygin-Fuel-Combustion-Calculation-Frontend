@@ -1,18 +1,19 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AlbumPage} from "./pages/AlbumPage";
-import ITunesPage from "./pages/ITunesPage";
-import { ROUTES } from "../Routes";
 import { HomePage } from "./pages/HomePage";
-import Navigation from "./components/Navigation"
+import FuelsPage from "./pages/FuelsPage";
+import { FuelDetailPage } from "./pages/FuelDetailPage";
+import { Navigation } from "./components/Navigation";
+import { ROUTES } from "../Routes";
+import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-    <Navigation/>
+      <Navigation />
       <Routes>
-        <Route path={ROUTES.HOME} index element={<HomePage />} />
-        <Route path={ROUTES.ALBUMS} element={<ITunesPage />} />
-        <Route path={`${ROUTES.ALBUMS}/:id`} element={<AlbumPage />} />
+        <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route path={ROUTES.FUELS} element={<FuelsPage />} />
+        <Route path={`${ROUTES.FUELS}/:id`} element={<FuelDetailPage />} />
       </Routes>
     </BrowserRouter>
   );
