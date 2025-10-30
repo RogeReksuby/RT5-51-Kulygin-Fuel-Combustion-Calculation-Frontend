@@ -26,7 +26,7 @@ export const FuelDetailPage: FC = () => {
       {fuel ? (
         <div className="contentMore">
           <div className="contentMoreFrame">
-            <img className="cardMoreImage" src={fuel.card_image} alt="card image" />
+            <img className="cardMoreImage" src={fuel.card_image || DefaultImage} alt="card image" />
             <div className="textsMore">
               <div className="titleHeatMore">
                 <div className="titleMore">

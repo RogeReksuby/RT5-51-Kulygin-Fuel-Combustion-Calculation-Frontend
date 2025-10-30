@@ -40,15 +40,6 @@ export const getFuelById = async (id: number): Promise<Fuel> => {
   }
 };
 
-export const addFuelToCombustion = async (fuelId: number): Promise<void> => {
-  try {
-    await fetch(`${API_BASE}/fuels/${fuelId}/add-to-comb`, {
-      method: 'POST'
-    });
-  } catch (error) {
-    console.warn('Failed to add fuel to combustion:', error);
-  }
-};
 
 export const getCombustionCartCount = async (): Promise<number> => {
   try {

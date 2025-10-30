@@ -33,7 +33,7 @@ export const FuelCard: FC<Props> = ({
           style={{ width: '100%' }}
           onClick={() => onDetailsClick(id)}
         >
-          Подробнее 
+          Подробнее &gt;
         </button>
         <button 
           className="wButton" 

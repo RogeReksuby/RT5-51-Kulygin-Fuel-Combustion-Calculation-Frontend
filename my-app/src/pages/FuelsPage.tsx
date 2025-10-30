@@ -1,5 +1,5 @@
 import { type FC, useState, useEffect } from 'react';
-import { getFuels, addFuelToCombustion, getCombustionCartCount } from '../modules/Api';
+import { getFuels, getCombustionCartCount } from '../modules/Api';
 import {type Fuel} from '../modules/types'
 import InputField  from '../components/InputField';
 import { Breadcrumbs } from '../components/BreadCrumbs';
@@ -57,7 +57,6 @@ const FuelsPage: FC = () => {
 
   const handleAddToCombustion = async (id: number) => {
     try {
-      await addFuelToCombustion(id);
       await loadCartCount();
     } catch (error) {
       console.error('Error adding fuel to combustion:', error);
