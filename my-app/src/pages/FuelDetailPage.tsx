@@ -1,17 +1,17 @@
 import { type FC, useEffect, useState } from 'react';
-import { BreadCrumbs } from '../components/BreadCrumbs';
-import { ROUTES, ROUTE_LABELS } from '../../Routes';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getFuelById } from '../modules/Api';
 import { type Fuel } from '../modules/types'
 import { Spinner, Container, Row, Col, Image } from 'react-bootstrap';
+import { Header } from '../components/FuelDetailsHeader'
+import { Footer } from '../components/FuelFooter';
+import { Breadcrumbs } from '../components/BreadCrumbs';
 import './FuelDetailPage.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
 
 export const FuelDetailPage: FC = () => {
   const [fuel, setFuel] = useState<Fuel | null>(null);
   const { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id) return;
@@ -21,19 +21,8 @@ export const FuelDetailPage: FC = () => {
 
   return (
     <div>
-      <div className="headerMore">
-        <div className="headerMoreFrame">
-          <div className="headerMoreLeftFrame">
-            <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
-          </div>
-          <div className="headerMoreRightFrame">
-            <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
-              Домой
-            </button>
-          </div>
-        </div>
-      </div>
-
+      <Header/>
+      <Breadcrumbs/>
       {fuel ? (
         <div className="contentMore">
           <div className="contentMoreFrame">
@@ -62,10 +51,7 @@ export const FuelDetailPage: FC = () => {
         </div>
       )}
 
-      <div className="footer">
-        <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
-        Расчет энергии сгорания топлива
-      </div>
+      <Footer/>
     </div>
   );
 };

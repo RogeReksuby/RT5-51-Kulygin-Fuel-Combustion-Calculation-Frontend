@@ -1,39 +1,76 @@
-import "./BreadCrumbs.css";
-import React from "react";
-import { Link } from "react-router-dom";
-import { type FC } from "react";
-import { ROUTES } from "../../Routes";
+import { type FC } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { ROUTES, ROUTE_LABELS } from '../../Routes';
+import './Breadcrumbs.css';
 
-interface ICrumb {
+interface Crumb {
   label: string;
   path?: string;
 }
 
-interface BreadCrumbsProps {
-  crumbs: ICrumb[];
-}
+export const Breadcrumbs: FC = () => {
+  const location = useLocation();
+  
+  // Функция для генерации хлебных крошек на основе текущего пути
+  const generateBreadcrumbs = (): Crumb[] => {
+    const pathnames = location.pathname.split('/').filter((x) => x);
+    const crumbs: Crumb[] = [];
 
-export const BreadCrumbs: FC<BreadCrumbsProps> = (props) => {
-  const { crumbs } = props;
+    // Всегда добавляем главную страницу как первую крошку
+    crumbs.push({
+      label: ROUTE_LABELS.HOME,
+      path: ROUTES.HOME
+    });
+
+    // Обрабатываем остальные части пути
+    let accumulatedPath = '';
+    
+    pathnames.forEach((pathname, index) => {
+      accumulatedPath += `/${pathname}`;
+      
+      // Для страницы списка топлива
+      if (pathname === 'fuels' && index === 0) {
+        crumbs.push({
+          label: ROUTE_LABELS.FUELS,
+          path: index === pathnames.length - 1 ? undefined : accumulatedPath
+        });
+      }
+      // Для страницы деталей топлива (fuels/:id)
+      else if (pathname === 'fuels' && pathnames[index + 1]) {
+        // Пропускаем, так как уже добавили fuels
+        return;
+      }
+      // Для ID топлива (детальная страница)
+      else if (!isNaN(Number(pathname)) && pathnames[index - 1] === 'fuels') {
+        crumbs.push({
+          label: 'Детали топлива', // Или можно получить название из состояния
+          path: undefined // Последняя крошка не кликабельна
+        });
+      }
+    });
+
+    return crumbs;
+  };
+
+  const breadcrumbs = generateBreadcrumbs();
 
   return (
-    <ul className="breadcrumbs">
-      <li>
-        <Link to={ROUTES.HOME}>Главная</Link>
-      </li>
-      {!!crumbs.length &&
-        crumbs.map((crumb, index) => (
-          <React.Fragment key={index}>
-            <li className="slash">/</li>
-            {index === crumbs.length - 1 ? (
-              <li>{crumb.label}</li>
+    <nav aria-label="Хлебные крошки" className="breadcrumbs">
+      <ul className="breadcrumbs-list">
+        {breadcrumbs.map((crumb, index) => (
+          <li key={index} className="breadcrumbs-item">
+            {index > 0 && <span className="breadcrumbs-separator">/</span>}
+            
+            {crumb.path ? (
+              <Link to={crumb.path} className="breadcrumbs-link">
+                {crumb.label}
+              </Link>
             ) : (
-              <li>
-                <Link to={crumb.path || ""}>{crumb.label}</Link>
-              </li>
+              <span className="breadcrumbs-current">{crumb.label}</span>
             )}
-          </React.Fragment>
+          </li>
         ))}
-    </ul>
+      </ul>
+    </nav>
   );
 };

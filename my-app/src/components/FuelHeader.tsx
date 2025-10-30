@@ -24,8 +24,11 @@ export const Header: FC<HeaderProps> = ({
               <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
             </div>
               <div className="panelFrameServ2">
+                <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
+                  Виды топлива
+                </button>
                 <button className="bButton" onClick={() => navigate(ROUTES.HOME)}>
-                  Домой
+                  Главная
                 </button>
               </div>
           </div>
