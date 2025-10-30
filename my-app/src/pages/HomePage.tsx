@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../Routes';
 import './HomePage.css';
+import {Header} from '../components/FuelHeader'
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -9,26 +10,10 @@ export const HomePage: FC = () => {
   return (
     <div>
       <header>
-        <div className="myHeader">
-          <div className="myHeaderPanel">
-            <div className="myHeaderPanelFrame">
-              <div className="panelFrameServ1">
-                <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
-              </div>
-              <div className="panelFrameServ2">
-                <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
-                  К топливу
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="headerServ1">
-            Расчет энергии сгорания топлива
-          </div>
-          <div className="headerServ2">
-            Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у.
-          </div>
-        </div>
+        <Header 
+                title="Расчет энергии сгорания топлива"
+                subtitle="Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у."
+              />
       </header>
 
       <div className="contentAll">

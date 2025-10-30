@@ -8,6 +8,12 @@ import { FuelCard } from '../components/FuelCard';
 import { ROUTES, ROUTE_LABELS } from '../../Routes';
 import { useNavigate } from 'react-router-dom';
 import './FuelsPage.css';
+import './universal.css';
+
+
+import { Header } from '../components/FuelHeader';
+import { Footer } from '../components/FuelFooter';
+
 
 const FuelsPage: FC = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -22,23 +28,28 @@ const FuelsPage: FC = () => {
     loadCartCount();
   }, []);
 
-const loadFuels = async () => {
-  setLoading(true);
-  try {
-    const filters = searchValue ? { searchQuery: searchValue } : undefined;
-    const data = await getFuels(filters);
-    setFuels(data); // data теперь точно массив
-  } catch (error) {
-    console.error('Error loading fuels:', error);
-    setFuels([]);
-  } finally {
-    setLoading(false);
-  }
-};
+  const loadFuels = async () => {
+    setLoading(true);
+    try {
+      const filters = searchValue ? { searchQuery: searchValue } : undefined;
+      const data = await getFuels(filters);
+      setFuels(data);
+    } catch (error) {
+      console.error('Error loading fuels:', error);
+      setFuels([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadCartCount = async () => {
-    const count = await getCombustionCartCount();
-    setCartCount(count);
+    try {
+      const count = await getCombustionCartCount();
+      setCartCount(count);
+    } catch (error) {
+      console.error('Error loading cart count:', error);
+      setCartCount(0);
+    }
   };
 
   const handleSearch = () => {
@@ -50,34 +61,20 @@ const loadFuels = async () => {
   };
 
   const handleAddToCombustion = async (id: number) => {
-    await addFuelToCombustion(id);
-    await loadCartCount();
+    try {
+      await addFuelToCombustion(id);
+      await loadCartCount();
+    } catch (error) {
+      console.error('Error adding fuel to combustion:', error);
+    }
   };
 
   return (
     <div>
-      <header>
-        <div className="myHeader">
-          <div className="myHeaderPanel">
-            <div className="myHeaderPanelFrame">
-              <div className="panelFrameServ1">
-                <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
-              </div>
-              <div className="panelFrameServ2">
-                <button className="bButton" onClick={() => navigate(ROUTES.HOME)}>
-                  Домой
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="headerServ1">
-            Расчет энергии сгорания топлива
-          </div>
-          <div className="headerServ2">
-            Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у.
-          </div>
-        </div>
-      </header>
+      <Header 
+        title="Расчет энергии сгорания топлива"
+        subtitle="Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у."
+      />
 
       <div className="contentAll">
         <div className="searchTitle">
@@ -129,10 +126,7 @@ const loadFuels = async () => {
         </div>
       </div>
 
-      <div className="footer">
-        <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
-        Расчет энергии сгорания топлива
-      </div>
+      <Footer />
     </div>
   );
 };
