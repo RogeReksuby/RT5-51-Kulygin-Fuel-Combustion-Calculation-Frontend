@@ -6,6 +6,11 @@ import { Breadcrumbs } from '../components/BreadCrumbs';
 import { FuelCard } from '../components/FuelCard';
 import { ROUTES } from '../../Routes';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Хук для отправки писем
+import { 
+  useSearchQuery,     // Хук для чтения поискового запроса
+  setSearchQuery,     // Действие для изменения поиска
+} from '../store/slices/filtersSlice'
 import './FuelsPage.css';
 import './universal.css';
 
@@ -15,7 +20,12 @@ import { Footer } from '../components/FuelFooter';
 
 
 const FuelsPage: FC = () => {
-  const [searchValue, setSearchValue] = useState('');
+
+  // 1. Получаем "почтальона" для отправки писем
+  const dispatch = useDispatch();
+  // 2. Читаем данные из почтового отделения
+  const searchQuery = useSearchQuery()
+
   const [fuels, setFuels] = useState<Fuel[]>([]);
   const [cartCount, setCartCount] = useState(0);
 
@@ -28,8 +38,9 @@ const FuelsPage: FC = () => {
 
   const loadFuels = async () => {
     try {
-      const filters = searchValue ? { searchQuery: searchValue } : undefined;
-      const data = await getFuels(filters);
+      const data = await getFuels({
+        searchQuery: searchQuery
+      });
       setFuels(data);
     } catch (error) {
       console.error('Error loading fuels:', error);
@@ -46,6 +57,12 @@ const FuelsPage: FC = () => {
       setCartCount(0);
     }
   };
+
+  // 3. Отправляем "письмо" в почтовое отделение
+  const handleSearchChange = (value: string) => {
+    // "Отправляем письмо" с новым поисковым запросом
+    dispatch(setSearchQuery(value));
+  }
 
   const handleSearch = () => {
     loadFuels();
@@ -78,8 +95,8 @@ const FuelsPage: FC = () => {
 
             <div className="searchContainer">
               <InputField
-                value={searchValue}
-                setValue={setSearchValue}
+                value={searchQuery}
+                setValue={handleSearchChange}
                 onSubmit={handleSearch}
                 placeholder="Введите название"
                 buttonTitle="Найти"
