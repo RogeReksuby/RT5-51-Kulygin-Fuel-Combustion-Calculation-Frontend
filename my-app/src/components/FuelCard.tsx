@@ -35,13 +35,7 @@ export const FuelCard: FC<Props> = ({
         >
           Подробнее &gt;
         </button>
-        <button 
-          className="wButton" 
-          style={{ width: '100%' }}
-          onClick={() => onAddToCombustion(id)}
-        >
-          Добавить
-        </button>
+
       </div>
     </div>
     <div className="cardBottom">

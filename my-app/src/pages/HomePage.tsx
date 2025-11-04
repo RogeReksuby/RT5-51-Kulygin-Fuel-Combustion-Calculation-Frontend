@@ -2,8 +2,10 @@ import { type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../Routes';
 import { Breadcrumbs } from '../components/BreadCrumbs';
+import { Carousel } from '../components/carousel';
 import './HomePage.css';
 import {Header} from '../components/FuelHeader'
+
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ export const HomePage: FC = () => {
           <div className="homeDescription">
             <h1>Добро пожаловать в систему расчета энергии сгорания</h1>
             
+            <Carousel />
+
             <div className="descriptionSection">
               <h2>О системе</h2>
               <p>
@@ -42,14 +46,7 @@ export const HomePage: FC = () => {
               </ul>
             </div>
 
-            <div className="actionSection">
-              <button 
-                className="bButton largeButton"
-                onClick={() => navigate(ROUTES.FUELS)}
-              >
-                Начать расчет энергии
-              </button>
-            </div>
+
           </div>
         </div>
       </div>

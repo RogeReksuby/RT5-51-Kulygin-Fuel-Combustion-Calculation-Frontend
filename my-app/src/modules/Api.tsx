@@ -8,14 +8,13 @@ export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
     const queryParams = new URLSearchParams();
     if (filters?.searchQuery) queryParams.append('title', filters.searchQuery);
     
-    // Добавьте /api/ обратно в путь
+    
     const response = await fetch(`/api/fuels?${queryParams}`);
     
     if (!response.ok) throw new Error('API request failed');
     
     const result = await response.json();
     
-    // Теперь правильно извлекаем данные из поля "data"
     if (result && Array.isArray(result.data)) {
       return result.data;
     } else {
@@ -33,7 +32,7 @@ export const getFuelById = async (id: number): Promise<Fuel> => {
     const response = await fetch(`/api/fuels/${id}`);
     if (!response.ok) throw new Error('API request failed');
     const result = await response.json();
-    return result.data; // Извлекаем из поля data
+    return result.data; 
   } catch (error) {
     console.warn('Using mock data due to API error:', error);
     return FUELS_MOCK.find(fuel => fuel.id === id) || FUELS_MOCK[0];

@@ -1,0 +1,34 @@
+/* Стрелки — делаем белыми с чёрной обводкой (или наоборот) */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #007bff; /* синий фон */
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Иконки внутри стрелок — делаем белыми */
+.carousel-control-prev-icon::before,
+.carousel-control-next-icon::before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-image: none;
+}
+
+
+
+/* Индикаторы (точки) */
+.carousel-indicators [data-bs-target] {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3); /* серый */
+  border: none;
+  transition: background-color 0.3s;
+}
+

@@ -25,10 +25,10 @@ export const Header: FC<HeaderProps> = ({
             </div>
               <div className="panelFrameServ2">
                 <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
-                  Виды топлива
+                  Топливо
                 </button>
                 <button className="bButton" onClick={() => navigate(ROUTES.HOME)}>
-                  Главная
+                  Система расчета топлива
                 </button>
               </div>
           </div>
