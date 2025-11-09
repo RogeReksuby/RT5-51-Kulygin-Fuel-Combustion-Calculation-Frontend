@@ -1,0 +1,196 @@
+/* ===== ВАШИ ОРИГИНАЛЬНЫЕ СТИЛИ ===== */
+.headerMore {
+    /* headerMore */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 50px;
+    gap: 10px;
+    width: 100%;
+    height: 80px;
+    background: #203563;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.headerMoreFrame {
+    /* headerMoreFrame */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 10px;
+    width: 100%;
+    height: 80px;
+    /*border-bottom: 2px solid #FFFFFF;*/
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.headerMoreLeftFrame {
+    /* headerMoreLeftFrame */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    width: 50%;
+    height: 80px;
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+/* ===== ДЕСКТОПНАЯ НАВИГАЦИЯ (заменяем headerMoreRightFrame) ===== */
+.headerMoreDesktopNav {
+    /* headerMoreRightFrame */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    width: 50%;
+    height: 80px;
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+}
+
+/* ===== МОБИЛЬНАЯ НАВИГАЦИЯ ===== */
+.headerMoreMobileNav {
+    box-sizing: border-box;
+    display: none;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    width: 50%;
+    height: 80px;
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+    position: relative;
+}
+
+/* Стили бургера */
+.burger-button {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: 2px solid white;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.burger-line {
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    display: block;
+}
+
+/* Анимация бургера */
+.burger-button.active .burger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burger-button.active .burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-button.active .burger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Выпадающее меню */
+.burger-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    min-width: 150px;
+    z-index: 1000;
+    padding: 8px 0;
+    margin-top: 5px;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: #203563;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* ===== МЕДИА-ЗАПРОСЫ ===== */
+
+/* На мобильных (до 768px) */
+@media screen and (max-width: 768px) {
+    .headerMore {
+        padding: 0px 20px;
+    }
+    
+    .headerMoreDesktopNav {
+        display: none !important;
+    }
+    
+    .headerMoreMobileNav {
+        display: flex !important;
+    }
+}
+
+/* На десктопе (769px+) */
+@media screen and (min-width: 769px) {
+    .headerMoreDesktopNav {
+        display: flex !important;
+    }
+    
+    .headerMoreMobileNav {
+        display: none !important;
+    }
+}
+
+/* Для очень маленьких телефонов */
+@media screen and (max-width: 480px) {
+    .headerMore {
+        padding: 0px 15px;
+    }
+    
+    .burger-button {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .burger-line {
+        width: 18px;
+    }
+}

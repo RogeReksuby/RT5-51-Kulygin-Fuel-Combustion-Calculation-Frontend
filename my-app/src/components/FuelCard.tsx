@@ -23,23 +23,35 @@ export const FuelCard: FC<Props> = ({
   <div className="card" style={{
     background: `linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${card_image || DefaultImage}) center/cover no-repeat`
   }}>
+    {/* ДЕСКТОПНАЯ СТРУКТУРА */}
     <div className="cardTop">
       <div className="cardTitle">
         {title}
       </div>
-      <div className="cardButton">
+      {/* ДЕСКТОПНАЯ КНОПКА - справа */}
+      <div className="cardButtonDesktop">
         <button 
           className="bButton" 
-          style={{ width: '100%' }}
           onClick={() => onDetailsClick(id)}
         >
           Подробнее &gt;
         </button>
-
       </div>
     </div>
+    
+    
+    
     <div className="cardBottom">
       {heat} МДж/кг
+    </div>
+    {/* МОБИЛЬНАЯ КНОПКА - внизу */}
+    <div className="cardButtonMobile">
+      <button 
+        className="bButton" 
+        onClick={() => onDetailsClick(id)}
+      >
+        Подробнее &gt;
+      </button>
     </div>
   </div>
 );

@@ -4,13 +4,7 @@
     padding: 0;
 }
 
-
 .content {
-
-
-    /* content */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -19,48 +13,33 @@
     align-content: flex-start;
     padding: 0 109px;
     gap: 20px 40px;
-
     width: 100%;
-
-
-
-    /* Inside auto layout */
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 0;
-
 }
 
 .card {
-    /* card */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px;
     gap: 10px;
-
     width: 400px;
     height: 300px;
     min-height: 300px;
-
-    /* background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(metan.png);*/
     border-radius: 15px;
     background-size: cover;
-    /* Inside auto layout */
     flex: none;
     order: 0;
     flex-grow: 0;
-
+    position: relative;
 }
 
+/* ДЕСКТОПНАЯ СТРУКТУРА */
 .cardTop {
-    /* cardTop */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -68,101 +47,170 @@
     align-items: center;
     padding: 10px;
     gap: 10px;
-
     width: 380px;
-
-
-
-    /* Inside auto layout */
     flex: none;
     order: 0;
     align-self: stretch;
     flex-grow: 0;
-
 }
 
 .cardTitle {
-    /* cardTitle */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     padding: 20px 10px;
     gap: 10px;
-
     width: 180px;
     height: 73px;
-
-
-    /* Inside auto layout */
     flex: none;
     order: 0;
     align-self: stretch;
     flex-grow: 1;
-
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
     line-height: 33px;
-    /* identical to box height */
-
     color: #FFFFFF;
-
 }
 
-.cardButton button{
-    /* cardButton */
-
-    /* Auto layout */
+/* ДЕСКТОПНАЯ КНОПКА - справа */
+.cardButtonDesktop {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 10px;
     gap: 10px;
-
     width: 170px;
-
-
-
-    /* Inside auto layout */
     flex: none;
     order: 1;
     flex-grow: 0;
+}
 
+/* МОБИЛЬНАЯ КНОПКА - внизу (по умолчанию скрыта) */
+.cardButtonMobile {
+    display: none; /* Скрыта на десктопе */
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    flex: none;
+    order: 2;
 }
 
 .cardBottom {
-    /* cardBottom */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
     padding: 10px;
     gap: 10px;
-
     width: 380px;
-
-
-
-    /* Inside auto layout */
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 1;
-
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 500;
     font-size: 32px;
     line-height: 44px;
-    /* identical to box height */
-
     color: #FFFFFF;
+}
 
+.searchContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+}
+
+/* СТИЛИ ДЛЯ ОБЕИХ КНОПОК */
+.cardButtonDesktop button,
+.cardButtonMobile button {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 10px;
+    width: 170px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+/* МОБИЛЬНАЯ КНОПКА - полная ширина */
+.cardButtonMobile button {
+    width: 100%;
+}
+
+/* ===== МЕДИА-ЗАПРОСЫ ДЛЯ МОБИЛЬНЫХ ===== */
+
+@media screen and (max-width: 480px) {
+    .content {
+        padding: 0 20px;
+        gap: 15px;
+    }
+    
+    .card {
+        width: 100%;
+        max-width: 400px;
+        min-width: 280px;
+        height: 280px; /* ↑ Увеличим высоту карточки для большего текста */
+    }
+    
+    .cardTop {
+        width: 100%;
+        flex-direction: column;
+        gap: 20px; /* ↑ Больше расстояние между элементами */
+    }
+    
+    .cardTitle {
+        width: 100%;
+        text-align: center;
+        font-size: 24px !important; /* ↑ Увеличили с 20px до 24px */
+        line-height: 1.3 !important;
+        height: auto;
+        padding: 15px 10px !important; /* ↑ Больше отступы */
+        font-weight: 700;
+    }
+    
+    .cardBottom {
+        width: 100%;
+        justify-content: flex-start;
+        align-items: flex-end;
+        padding-left: 20px;
+        font-size: 36px !important; /* ↑ Увеличили с 28px до 36px */
+        line-height: 1.2 !important;
+        order: 1;
+        font-weight: 600;
+    }
+    
+    .cardButtonDesktop {
+        display: none !important;
+    }
+    
+    .cardButtonMobile {
+        display: flex !important;
+        order: 2;
+    }
+    
+    .cardButtonMobile button {
+        width: 100%;
+        font-size: 18px !important; /* ↑ Увеличили кнопку тоже */
+        padding: 14px !important; /* ↑ Больше кнопка */
+        font-weight: 700;
+    }
+}
+/* ===== ДЕСКТОП - СКРЫВАЕМ МОБИЛЬНУЮ КНОПКУ ===== */
+@media screen and (min-width: 481px) {
+    .cardButtonDesktop {
+        display: flex !important;
+    }
+    
+    .cardButtonMobile {
+        display: none !important;
+    }
 }

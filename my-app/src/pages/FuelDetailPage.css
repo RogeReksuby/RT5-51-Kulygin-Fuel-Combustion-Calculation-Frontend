@@ -1,304 +1,257 @@
 .contentMore {
-    /* contentMore */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px;
-    gap: 10px;
-
+    padding: 20px;
+    gap: 20px;
     width: 100%;
-
-
-
-    /* Inside auto layout */
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 0;
-
 }
 
 .contentMoreFrame {
-    /* contentMoreFrame */
-
-    /* Auto layout */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
-
-    width: 100%;
-
-
-
-    /* Inside auto layout */
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-
-}
-
-.cardMoreImage {
-    /* imageMore */
-
-    /* Auto layout */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 20px 10px;
-    gap: 10px;
-
-    width: 50%;
-
-
-    /* Inside auto layout */
-    flex: none;
-    order: 0;
-    flex-grow: 1;
-
-}
-
-.textsMore {
-    /* textsMore */
-
-    /* Auto layout */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-    gap: 40px;
-
-    width: 50%;
-
-
-
-    /* Inside auto layout */
-    flex: none;
-    order: 1;
-    align-self: stretch;
-    flex-grow: 1;
-
-}
-
-.titleHeatMore {
-    /* titleHeatMore */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
-    gap: 10px;
-
+    gap: 40px;
     width: 100%;
-    height: 106px;
-
-
-    /* Inside auto layout */
+    max-width: 1200px;
+    margin: 0 auto;
     flex: none;
     order: 0;
     align-self: stretch;
     flex-grow: 0;
+}
 
+.cardMoreImage {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0;
+    gap: 10px;
+    width: 40%;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.cardMoreImage img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.textsMore {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    gap: 30px;
+    width: 60%;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 1;
+}
+
+.titleHeatMore {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    gap: 20px;
+    width: 100%;
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
 }
 
 .titleMore {
-    /* titleMore */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 10px;
+    padding: 0;
     gap: 10px;
-
-    width: 50%;
-
-
-
-    /* Inside auto layout */
+    width: auto;
     flex: none;
     order: 0;
-    flex-grow: 1;
-
+    flex-grow: 0;
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 700;
-    font-size: 48px;
-    line-height: 66px;
-    /* identical to box height */
-
+    font-size: 36px;
+    line-height: 1.2;
     color: #203563;
-
-
-
 }
 
 .heatMore {
-    /* heatMore */
-
-    /* Auto layout */
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    padding: 10px;
-    gap: 20px;
-
-    width: 50%;
-
-
-
-    /* Inside auto layout */
+    padding: 0;
+    gap: 10px;
+    width: auto;
     flex: none;
     order: 1;
-    flex-grow: 1;
-
+    flex-grow: 0;
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 700;
-    font-size: 48px;
-    line-height: 66px;
-    /* identical to box height */
-
+    font-size: 28px;
+    line-height: 1.2;
     color: #203563;
-
-
+    white-space: nowrap;
 }
 
 .shortTextMore {
-
     width: 100%;
-    padding: 20px;
+    padding: 0;
     font-family: 'Manrope';
     font-style: normal;
-    font-weight: 400;
-    font-size: 36px;
-    line-height: 49px;
-
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.4;
     color: #203563;
-
-
-    /* Inside auto layout */
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 0;
-
 }
 
 .fullTextMore {
-
     width: 100%;
-    padding: 20px;
+    padding: 0;
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 400;
-    font-size: 24px;
-    line-height: 33px;
-
+    font-size: 16px;
+    line-height: 1.6;
     color: #203563;
-
-
-    /* Inside auto layout */
     flex: none;
     order: 2;
     flex-grow: 0;
-
 }
 
-.fuel-detail-container {
-  padding: 20px;
+.fuel-detail-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
 }
 
-.fuel-detail-image {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  border-radius: 12px;
-}
-
-.fuel-detail-info {
-  padding: 20px 0;
-}
-
-.fuel-heat-large {
-  font-size: 2rem;
-  color: #0F94CF;
-  margin: 15px 0;
-}
-
-.fuel-properties {
-  margin: 20px 0;
-}
-
-.fuel-properties p {
-  margin: 10px 0;
-  font-size: 1.1rem;
-}
-
-/* Адаптивность для страницы деталей */
+/* Планшеты */
 @media (max-width: 768px) {
-  .contentMoreFrame {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .cardMoreImage {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
-  }
-  
-  .textsMore {
-    width: 100%;
-  }
-  
-  .titleHeatMore {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
-  
-  .titleMore {
-    font-size: 2rem !important;
-  }
-  
-  .heatMore {
-    font-size: 1.5rem !important;
-  }
+    .contentMore {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .contentMoreFrame {
+        flex-direction: column;
+        padding: 15px;
+        gap: 30px;
+    }
+    
+    .cardMoreImage {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .textsMore {
+        width: 100%;
+        gap: 20px;
+    }
+    
+    .titleHeatMore {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        text-align: left;
+    }
+    
+    .titleMore {
+        font-size: 28px;
+        width: 100%;
+    }
+    
+    .heatMore {
+        font-size: 24px;
+        justify-content: flex-start;
+        width: 100%;
+    }
+    
+    .shortTextMore {
+        font-size: 18px;
+    }
+    
+    .fullTextMore {
+        font-size: 16px;
+    }
 }
 
+/* Мобильные устройства */
 @media (max-width: 480px) {
-  .fuel-detail-container {
-    padding: 15px 10px;
-  }
-  
-  .titleMore {
-    font-size: 1.7rem !important;
-  }
-  
-  .heatMore {
-    font-size: 1.3rem !important;
-  }
-  
-  .shortTextMore,
-  .fullTextMore {
-    font-size: 1rem !important;
-    line-height: 1.5;
-  }
+    .contentMore {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .contentMoreFrame {
+        padding: 10px;
+        gap: 20px;
+    }
+    
+    .titleMore {
+        font-size: 24px;
+    }
+    
+    .heatMore {
+        font-size: 20px;
+    }
+    
+    .shortTextMore {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+    
+    .fullTextMore {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 320px) {
+    .titleMore {
+        font-size: 20px;
+    }
+    
+    .heatMore {
+        font-size: 18px;
+    }
+    
+    .shortTextMore {
+        font-size: 14px;
+    }
+    
+    .fullTextMore {
+        font-size: 13px;
+    }
 }

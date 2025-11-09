@@ -20,8 +20,6 @@
   background-image: none;
 }
 
-
-
 /* Индикаторы (точки) */
 .carousel-indicators [data-bs-target] {
   width: 12px;
@@ -32,3 +30,109 @@
   transition: background-color 0.3s;
 }
 
+.carousel-item {
+  background-color: #f8f9fa;
+}
+
+/* Стили для контента карусели */
+.carousel-content {
+  display: flex;
+  align-items: center;
+  height: 300px;
+  width: 75%;
+  background-color: #f8f9fa;
+}
+
+.carousel-image-container {
+  flex-shrink: 0;
+  padding: 1rem;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-image {
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.carousel-text-container {
+  padding: 1.5rem;
+  width: 50%;
+}
+
+.carousel-text-container h4 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.carousel-text-container p {
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .carousel-content {
+    flex-direction: row;
+    height: 250px;
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  .carousel-image-container {
+    width: 40%;
+    padding: 0.75rem;
+  }
+  
+  .carousel-image {
+    max-height: 150px;
+  }
+  
+  .carousel-text-container {
+    width: 60%;
+    padding: 1rem;
+  }
+  
+  .carousel-text-container h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .carousel-text-container p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 480px) {
+  .carousel-content {
+    height: 220px;
+    width: 95%;
+  }
+  
+  .carousel-image-container {
+    width: 35%;
+    padding: 0.5rem;
+  }
+  
+  .carousel-image {
+    max-height: 120px;
+  }
+  
+  .carousel-text-container {
+    width: 65%;
+    padding: 0.75rem;
+  }
+  
+  .carousel-text-container h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .carousel-text-container p {
+    font-size: 0.85rem;
+  }
+}
