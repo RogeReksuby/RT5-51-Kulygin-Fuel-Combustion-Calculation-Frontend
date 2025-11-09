@@ -588,3 +588,147 @@ html, body {
     gap: 10px;              /* расстояние между элементами */
     flex-direction: row-reverse;
 }
+
+/* Адаптивная сетка для карточек */
+.content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Адаптивность карточек */
+.card {
+  width: 100%;
+  min-height: 300px;
+  margin: 0;
+}
+
+/* Медиа-запросы для разных экранов */
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 0 15px;
+  }
+  
+  .card {
+    height: 280px;
+  }
+  
+  .cardTitle {
+    font-size: 1.3rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .cardBottom {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 10px;
+  }
+  
+  .card {
+    height: 250px;
+  }
+  
+  .cardTop {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .cardTitle {
+    width: 100% !important;
+    text-align: center;
+  }
+  
+  .cardButton {
+    width: 100% !important;
+    flex-direction: row;
+    gap: 10px;
+  }
+  
+  .cardButton button {
+    flex: 1;
+  }
+}
+
+/* Адаптивность поисковой секции */
+.searchTitle {
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.searchBlankFrame {
+  display: none;
+}
+
+.searchTitleFrame {
+  width: 100% !important;
+  height: auto !important;
+  order: 1;
+}
+
+.buckFrame {
+  width: 100% !important;
+  height: auto !important;
+  justify-content: center;
+  order: 2;
+}
+
+.searchContainer {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Адаптивность поля поиска */
+.searchString {
+  width: 100% !important;
+  min-width: auto !important;
+}
+
+/* Медиа-запросы для поиска */
+@media (max-width: 768px) {
+  .searchTitleFrame {
+    font-size: 2.5rem !important;
+    line-height: 1.2 !important;
+    padding-bottom: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchTitle {
+    padding: 15px 10px;
+    gap: 15px;
+  }
+  
+  .searchTitleFrame {
+    font-size: 2rem !important;
+  }
+  
+  .searchContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .searchString {
+    width: 100% !important;
+  }
+}

@@ -1,0 +1,204 @@
+/* ===== СБРОС ВСЕХ СТИЛЕЙ ===== */
+.desktop-nav-buttons,
+.mobile-nav-burger {
+  all: unset;
+}
+
+/* ===== ОРИГИНАЛЬНАЯ СТРУКТУРА ===== */
+.myHeaderPanelFrame {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  border-bottom: 2px solid #FFFFFF;
+}
+
+.panelFrameServ1 {
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+/* ===== ДЕСКТОПНЫЕ КНОПКИ (ПО УМОЛЧАНИЮ ВИДНЫ) ===== */
+.desktop-nav-buttons {
+  width: 50%;
+  display: flex !important; /* Форсируем отображение */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  height: 80px;
+}
+
+/* ===== МОБИЛЬНЫЙ БУРГЕР (ПО УМОЛЧАНИЮ СКРЫТ) ===== */
+.mobile-nav-burger {
+  width: 50%;
+  display: none !important; /* Форсируем скрытие */
+  justify-content: flex-end;
+  align-items: center;
+  height: 80px;
+  position: relative;
+}
+
+/* Стили бургера */
+.burger-button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: 2px solid white;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.burger-line {
+  width: 20px;
+  height: 2px;
+  background-color: white;
+  display: block;
+}
+
+/* Выпадающее меню */
+.burger-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  min-width: 120px;
+  z-index: 1000;
+  padding: 8px 0;
+  margin-top: 5px;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: #203563;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* ===== КРИТИЧЕСКИ ВАЖНЫЕ МЕДИА-ЗАПРОСЫ ===== */
+
+/* На мобильных - СКРЫВАЕМ кнопки, ПОКАЗЫВАЕМ бургер */
+@media screen and (max-width: 768px) {
+  .desktop-nav-buttons {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  .mobile-nav-burger {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 50% !important;
+    height: 80px !important;
+  }
+}
+
+/* На десктопе - ПОКАЗЫВАЕМ кнопки, СКРЫВАЕМ бургер */
+@media screen and (min-width: 769px) {
+  .desktop-nav-buttons {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 50% !important;
+    height: 80px !important;
+  }
+  
+  .mobile-nav-burger {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* ===== ОСТАЛЬНЫЕ ВАШИ СТИЛИ ===== */
+.myHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0px 0px;
+  gap: 10px;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(http://127.0.0.1:9000/ripimages/67b533f8328d3abdd24ae6c571c5c4fd.jpg) center/cover no-repeat;
+}
+
+.myHeaderPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 50px;
+  gap: 10px;
+  width: 100%;
+  height: 80px;
+}
+
+.headerServ1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 200px;
+  gap: 20px;
+  width: 100%;
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 87px;
+  color: #FFFFFF;
+}
+
+.headerServ2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  width: 100%;
+  background: #0F94CF;
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 44px;
+  color: #FFFFFF;
+}
+
+/* ВРЕМЕННО ДЛЯ ТЕСТА - УБЕРИТЕ ПОСЛЕ ПРОВЕРКИ */
+.desktop-nav-buttons {
+  background-color: rgba(0, 255, 0, 0.3) !important; /* Зеленый - десктоп */
+}
+
+.mobile-nav-burger {
+  background-color: rgba(255, 0, 0, 0.3) !important; /* Красный - мобильный */
+}
+
+.burger-button {
+  background-color: yellow !important; /* Желтый - кнопка бургера */
+}

@@ -220,3 +220,85 @@
     flex-grow: 0;
 
 }
+
+.fuel-detail-container {
+  padding: 20px;
+}
+
+.fuel-detail-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 12px;
+}
+
+.fuel-detail-info {
+  padding: 20px 0;
+}
+
+.fuel-heat-large {
+  font-size: 2rem;
+  color: #0F94CF;
+  margin: 15px 0;
+}
+
+.fuel-properties {
+  margin: 20px 0;
+}
+
+.fuel-properties p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+/* Адаптивность для страницы деталей */
+@media (max-width: 768px) {
+  .contentMoreFrame {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .cardMoreImage {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .textsMore {
+    width: 100%;
+  }
+  
+  .titleHeatMore {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .titleMore {
+    font-size: 2rem !important;
+  }
+  
+  .heatMore {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .fuel-detail-container {
+    padding: 15px 10px;
+  }
+  
+  .titleMore {
+    font-size: 1.7rem !important;
+  }
+  
+  .heatMore {
+    font-size: 1.3rem !important;
+  }
+  
+  .shortTextMore,
+  .fullTextMore {
+    font-size: 1rem !important;
+    line-height: 1.5;
+  }
+}
