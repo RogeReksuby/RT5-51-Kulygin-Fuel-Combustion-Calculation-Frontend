@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ROUTES, ROUTE_LABELS } from '../../Routes';
-import './Breadcrumbs.css';
+import './BreadCrumbs.css';
 
 interface Crumb {
   label: string;
