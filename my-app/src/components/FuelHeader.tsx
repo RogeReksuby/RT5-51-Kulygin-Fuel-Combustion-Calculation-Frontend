@@ -3,7 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../Routes';
 import './FuelHeader.css';
 
-export const Header: FC = () => {
+interface HeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export const Header: FC<HeaderProps> = ({ 
+  title = "Расчет энергии сгорания топлива", 
+  subtitle = "Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у."
+}) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -64,10 +72,10 @@ export const Header: FC = () => {
         </div>
         
         <div className="headerServ1">
-          Расчет энергии сгорания топлива
+          {title}
         </div>
         <div className="headerServ2">
-          Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у.
+          {subtitle}
         </div>
       </div>
     </header>

@@ -90,9 +90,9 @@ const FuelsPage: FC = () => {
       <div className="contentAll">
         <div className="searchTitle">
           <div className="searchBlankFrame"></div>
+          
           <div className="searchTitleFrame">
             Топливо
-
             <div className="searchContainer">
               <InputField
                 value={searchQuery}
@@ -103,18 +103,20 @@ const FuelsPage: FC = () => {
               />
             </div>
           </div>
+          
           <div className="buckFrame">
             {cartCount !== 0 ? (
-              
-              <button className="buttonBuck">
-                <img src="http://127.0.0.1:9000/ripimages/korzinaGPORENIE.png" alt="Корзина" />
-                <div className="circleBuck">{cartCount}</div>
-              </button>
+              //<a href={`/combustion/${reqID}`} className="cart-link">
+                <button className="buttonBuck">
+                  <img src="http://127.0.0.1:9000/ripimages/korzinaGPORENIE.png" alt="Корзина" />
+                  <div className="circleBuck">{cartCount}</div>
+                </button>
+              //</a>
             ) : (
               <button className="buttonBuck empty-cart" disabled>
                 <img src="http://127.0.0.1:9000/ripimages/korzinaGPORENIE.png" alt="Корзина" />
               </button>
-          )}
+            )}
           </div>
         </div>
 

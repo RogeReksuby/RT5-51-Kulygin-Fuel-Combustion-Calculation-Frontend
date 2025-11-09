@@ -190,15 +190,72 @@
   color: #FFFFFF;
 }
 
-/* ВРЕМЕННО ДЛЯ ТЕСТА - УБЕРИТЕ ПОСЛЕ ПРОВЕРКИ */
-.desktop-nav-buttons {
-  background-color: rgba(0, 255, 0, 0.3) !important; /* Зеленый - десктоп */
+/* ===== АДАПТИВНОСТЬ ДЛЯ ЗАГОЛОВКОВ ХЕДЕРА ===== */
+
+/* Для планшетов и маленьких ноутбуков (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+  .headerServ1 {
+    font-size: 48px !important; /* Уменьшаем с 64px */
+    line-height: 1.2 !important; /* Уменьшаем межстрочный интервал */
+    padding: 25px 100px !important; /* Уменьшаем боковые отступы */
+  }
+  
+  .headerServ2 {
+    font-size: 24px !important; /* Уменьшаем с 32px */
+    line-height: 1.3 !important;
+  }
 }
 
-.mobile-nav-burger {
-  background-color: rgba(255, 0, 0, 0.3) !important; /* Красный - мобильный */
+/* Для планшетов (768px и меньше) */
+@media screen and (max-width: 768px) {
+  .headerServ1 {
+    font-size: 36px !important; /* Еще меньше для планшетов */
+    line-height: 1.2 !important;
+    padding: 20px 50px !important; /* Еще меньше отступы */
+    text-align: center; /* Центрируем текст */
+  }
+  
+  .headerServ2 {
+    font-size: 18px !important;
+    line-height: 1.3 !important;
+    padding: 8px 20px !important;
+    text-align: center;
+  }
+  
+  /* Также адаптируем отступы для панели */
+  .myHeaderPanel {
+    padding: 0px 20px !important;
+  }
 }
 
-.burger-button {
-  background-color: yellow !important; /* Желтый - кнопка бургера */
+/* Для мобильных телефонов (480px и меньше) */
+@media screen and (max-width: 480px) {
+  .headerServ1 {
+    font-size: 28px !important; /* Оптимальный размер для телефонов */
+    line-height: 1.2 !important;
+    padding: 15px 20px !important; /* Минимальные отступы */
+  }
+  
+  .headerServ2 {
+    font-size: 16px !important; /* Читаемый размер для мелкого текста */
+    line-height: 1.3 !important;
+    padding: 8px 15px !important;
+  }
+  
+  .myHeaderPanel {
+    padding: 0px 15px !important;
+  }
+}
+
+/* Для очень маленьких телефонов (320px и меньше) */
+@media screen and (max-width: 320px) {
+  .headerServ1 {
+    font-size: 24px !important; /* Минимальный читаемый размер */
+    padding: 12px 10px !important;
+  }
+  
+  .headerServ2 {
+    font-size: 14px !important;
+    padding: 6px 10px !important;
+  }
 }
