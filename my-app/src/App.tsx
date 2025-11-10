@@ -5,7 +5,7 @@ import { FuelDetailPage } from "./pages/FuelDetailPage";
 import { ROUTES } from "../Routes";
 import "./App.css";
 
-const REPO_NAME = "web-rip-front"; 
+const REPO_NAME = "web_rip_front"; 
 
 function App() {
   return (
