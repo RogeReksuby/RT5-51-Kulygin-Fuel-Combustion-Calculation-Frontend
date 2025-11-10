@@ -5,9 +5,11 @@ import { FuelDetailPage } from "./pages/FuelDetailPage";
 import { ROUTES } from "../Routes";
 import "./App.css";
 
+const REPO_NAME = "web-rip-front"; 
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={`/${REPO_NAME}`}>
       <Routes>
         <Route path={ROUTES.HOME} element={<HomePage />} />
         <Route path={ROUTES.FUELS} element={<FuelsPage />} />
@@ -18,3 +20,5 @@ function App() {
 }
 
 export default App;
+
+

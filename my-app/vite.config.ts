@@ -15,4 +15,5 @@ export default defineConfig({
     }
   },
   plugins: [react()],
+  base: "/web_rip_front/",
 })
