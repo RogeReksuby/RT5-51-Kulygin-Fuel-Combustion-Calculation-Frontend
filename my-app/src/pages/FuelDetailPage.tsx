@@ -1,8 +1,8 @@
 import { type FC, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams /*, useNavigate */} from 'react-router-dom';
 import { getFuelById } from '../modules/Api';
 import { type Fuel } from '../modules/types'
-import { Spinner, Container, Row, Col, Image } from 'react-bootstrap';
+import { Spinner /*, Container, Row, Col, Image */} from 'react-bootstrap';
 import { Header } from '../components/FuelDetailsHeader'
 import { Footer } from '../components/FuelFooter';
 import { Breadcrumbs } from '../components/BreadCrumbs';

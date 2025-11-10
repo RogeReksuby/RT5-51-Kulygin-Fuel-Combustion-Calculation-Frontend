@@ -1,5 +1,4 @@
 import { type FC } from 'react';
-import { Card } from 'react-bootstrap';
 import './FuelCard.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
 
@@ -9,7 +8,7 @@ interface Props {
   heat: number;
   card_image: string;
   onDetailsClick: (id: number) => void;
-  onAddToCombustion: (id: number) => void;
+  //onAddToCombustion: (id: number) => void;
 }
 
 export const FuelCard: FC<Props> = ({ 
@@ -18,7 +17,6 @@ export const FuelCard: FC<Props> = ({
   heat, 
   card_image, 
   onDetailsClick, 
-  onAddToCombustion 
 }) => (
   <div className="card" style={{
     background: `linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${card_image || DefaultImage}) center/cover no-repeat`

@@ -72,13 +72,13 @@ const FuelsPage: FC = () => {
     navigate(`${ROUTES.FUELS}/${id}`);
   };
 
-  const handleAddToCombustion = async (id: number) => {
+  /*const handleAddToCombustion = async (id: number) => {
     try {
       await loadCartCount();
     } catch (error) {
       console.error('Error adding fuel to combustion:', error);
     }
-  };
+  };*/
 
   return (
     <div>
@@ -128,7 +128,7 @@ const FuelsPage: FC = () => {
               key={fuel.id}
               {...fuel}
               onDetailsClick={handleDetailsClick}
-              onAddToCombustion={handleAddToCombustion}
+              //onAddToCombustion={handleAddToCombustion}
             />
           ))}
         </div>

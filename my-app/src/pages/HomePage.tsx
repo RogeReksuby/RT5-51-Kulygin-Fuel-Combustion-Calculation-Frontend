@@ -1,6 +1,6 @@
 import { type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../Routes';
+//import { useNavigate } from 'react-router-dom';
+//import { ROUTES } from '../../Routes';
 import { Breadcrumbs } from '../components/BreadCrumbs';
 import { Carousel } from '../components/carousel';
 import './HomePage.css';
@@ -8,7 +8,7 @@ import {Header} from '../components/FuelHeader'
 
 
 export const HomePage: FC = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   return (
     <div>

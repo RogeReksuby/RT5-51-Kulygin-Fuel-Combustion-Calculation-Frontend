@@ -1,5 +1,4 @@
 import { type FC } from 'react';
-import DefaultImage from '../assets/DefaultImage.jpg';
 import CalculationImage from '../assets/Calculation.jpg';
 import FuelsImage from '../assets/Fuels.jpg';
 import EfficiencyImage from '../assets/Efficiency.jpg';
