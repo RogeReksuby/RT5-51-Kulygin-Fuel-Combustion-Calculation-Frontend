@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/web_rip_front/sw.js', { scope: '/web_rip_front/' })})}

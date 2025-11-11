@@ -1,1 +1,1 @@
-{"name":"Расчет энергии сгорания топлива","short_name":"FuelCalc","start_url":"/web_rip_front/","display":"standalone","background_color":"#203563","theme_color":"#203563","lang":"en","scope":"/web_rip_front/","orientation":"portrait-primary","icons":[{"src":"/iconfuel192.png","type":"image/png","sizes":"192x192"},{"src":"/iconfuel512.png","type":"image/png","sizes":"512x512"}]}
+{"name":"my-app","short_name":"my-app","start_url":"/web_rip_front/","display":"standalone","background_color":"#ffffff","theme_color":"#42b883","lang":"en","scope":"/web_rip_front/"}
