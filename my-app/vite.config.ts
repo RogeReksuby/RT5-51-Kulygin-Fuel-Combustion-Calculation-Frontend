@@ -20,7 +20,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       devOptions: {
         enabled: true, // Включаем PWA в режиме разработки
-      },
+      },/*
       manifest: {
         name: "Расчет энергии сгорания топлива",
         short_name: "FuelCalc",
@@ -41,7 +41,7 @@ export default defineConfig({
             sizes: "512x512"
           }
         ]
-      }
+      }*/
     })
   ],
   base: "/web_rip_front/",

@@ -5,11 +5,15 @@ import { store } from './store';
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App.tsx'
-import { registerSW } from 'virtual:pwa-register'
+//import { registerSW } from 'virtual:pwa-register'
 
-// Регистрация PWA Service Worker
-if ('serviceWorker' in navigator) {
-  registerSW()
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker
+      .register("/web_rip_front/serviceWorker.js")
+      .then(res => console.log("SW registered"))
+      .catch(err => console.log("SW not registered", err))
+  })
 }
 
 createRoot(document.getElementById('root')!).render(
