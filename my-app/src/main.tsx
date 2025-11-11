@@ -11,7 +11,7 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
     navigator.serviceWorker
       .register("/web_rip_front/serviceWorker.js")
-      .then(res => console.log("SW registered"))
+      .then(() => console.log("SW registered"))
       .catch(err => console.log("SW not registered", err))
   })
 }
