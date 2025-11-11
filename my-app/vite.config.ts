@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -7,13 +8,41 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // Ваш Go бэкенд на порту 8080
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
-        //rewrite: (path) => path.replace(/^\/api/, '') // Убираем /api из пути
       },
     }
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true, // Включаем PWA в режиме разработки
+      },
+      manifest: {
+        name: "Расчет энергии сгорания топлива",
+        short_name: "FuelCalc",
+        start_url: "/web_rip_front/",
+        display: "standalone",
+        background_color: "#203563",
+        theme_color: "#203563",
+        orientation: "portrait-primary",
+        icons: [
+          {
+            src: "/iconfuel192.png",
+            type: "image/png",
+            sizes: "192x192"
+          },
+          {
+            src: "/iconfuel512.png", 
+            type: "image/png",
+            sizes: "512x512"
+          }
+        ]
+      }
+    })
+  ],
   base: "/web_rip_front/",
 })
