@@ -9,6 +9,7 @@ import path from 'path'
 export default defineConfig({
   server: { 
     port: 3000,
+    host: '0.0.0.0',
     https: { // ← Добавьте эту секцию
       key: fs.readFileSync(path.resolve(__dirname, 'cert.key')),
       cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')),
