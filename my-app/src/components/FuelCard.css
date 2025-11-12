@@ -214,3 +214,48 @@
         display: none !important;
     }
 }
+
+/* ===== АДАПТИВ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ (1366px и ниже) ===== */
+@media screen and (max-width: 1366px) {
+  .content {
+    padding: 0 30px;
+    gap: 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 360px;
+    min-width: 280px;
+    height: auto;
+    min-height: 280px;
+  }
+
+  .cardTop {
+    width: 100%;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .cardTitle {
+    width: 100%;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    font-size: 22px !important;
+    padding: 15px 10px !important;
+    line-height: 1.3;
+  }
+
+  .cardButtonDesktop {
+    display: none !important;
+  }
+
+  .cardButtonMobile {
+    display: flex !important;
+  }
+
+  .cardButtonMobile button {
+    width: 100%;
+  }
+}
+
