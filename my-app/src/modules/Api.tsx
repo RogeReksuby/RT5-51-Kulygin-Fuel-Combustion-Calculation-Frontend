@@ -1,15 +1,15 @@
 import { type Fuel, type FuelFilter } from './types';
 import { FUELS_MOCK } from './mockData';
+import { API_BASE_URL } from '../target_config';
 
-const API_BASE = '/api';
+// Удалите эту строку: const API_BASE = '/api';
 
 export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
   try {
     const queryParams = new URLSearchParams();
     if (filters?.searchQuery) queryParams.append('title', filters.searchQuery);
     
-    
-    const response = await fetch(`/api/fuels?${queryParams}`);
+    const response = await fetch(`${API_BASE_URL}/fuels?${queryParams}`);
     
     if (!response.ok) throw new Error('API request failed');
     
@@ -29,7 +29,7 @@ export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
 
 export const getFuelById = async (id: number): Promise<Fuel> => {
   try {
-    const response = await fetch(`/api/fuels/${id}`);
+    const response = await fetch(`${API_BASE_URL}/fuels/${id}`);
     if (!response.ok) throw new Error('API request failed');
     const result = await response.json();
     return result.data; 
@@ -39,10 +39,9 @@ export const getFuelById = async (id: number): Promise<Fuel> => {
   }
 };
 
-
 export const getCombustionCartCount = async (): Promise<number> => {
   try {
-    const response = await fetch(`${API_BASE}/combustions/cart-icon`);
+    const response = await fetch(`${API_BASE_URL}/combustions/cart-icon`);
     if (!response.ok) throw new Error('API request failed');
     const data = await response.json();
     return data.count || 0;
