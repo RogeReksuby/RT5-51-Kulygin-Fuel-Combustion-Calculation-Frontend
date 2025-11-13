@@ -2,6 +2,8 @@ import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../Routes';
 import './FuelHeader.css';
+import photo from '../assets/photo.png'
+import backimage from '../assets/backimage.jpg'
 
 interface HeaderProps {
   title?: string;
@@ -17,11 +19,16 @@ export const Header: FC<HeaderProps> = ({
 
   return (
     <header>
-      <div className="myHeader">
+      <div 
+        className="myHeader" 
+        style={{
+          background: `linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${backimage}) center/cover no-repeat`
+        }}
+      >
         <div className="myHeaderPanel">
           <div className="myHeaderPanelFrame">
             <div className="panelFrameServ1">
-              <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
+              <img className="logoImage" src={photo} alt="logo" />
             </div>
             
             {/* ТОЛЬКО ДЕСКТОПНЫЕ КНОПКИ */}

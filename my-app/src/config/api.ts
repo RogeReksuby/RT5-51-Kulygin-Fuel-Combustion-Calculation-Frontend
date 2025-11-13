@@ -2,9 +2,9 @@
 import { API_BASE_URL } from '../target_config';
 
 export const getApiBaseUrl = (): string => {
-  return API_BASE_URL;
+  return API_BASE_URL+'/api';
 };
 
 export const getTauriApiBaseUrl = (): string => {
-  return 'http://192.168.0.102:8080';
+  return 'http://192.168.1.172:8080/api';
 };

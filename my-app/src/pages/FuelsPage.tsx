@@ -13,6 +13,7 @@ import {
 } from '../store/slices/filtersSlice'
 import './FuelsPage.css';
 import './universal.css';
+import korzina from '../assets/korzinaGPORENIE.png'
 
 
 import { Header } from '../components/FuelHeader';
@@ -108,13 +109,13 @@ const FuelsPage: FC = () => {
             {cartCount !== 0 ? (
               //<a href={`/combustion/${reqID}`} className="cart-link">
                 <button className="buttonBuck">
-                  <img src="http://127.0.0.1:9000/ripimages/korzinaGPORENIE.png" alt="Корзина" />
+                  <img src={korzina} alt="Корзина" />
                   <div className="circleBuck">{cartCount}</div>
                 </button>
               //</a>
             ) : (
               <button className="buttonBuck empty-cart" disabled>
-                <img src="http://127.0.0.1:9000/ripimages/korzinaGPORENIE.png" alt="Корзина" />
+                <img src={korzina} alt="Корзина" />
               </button>
             )}
           </div>

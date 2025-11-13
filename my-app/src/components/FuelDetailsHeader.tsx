@@ -2,6 +2,8 @@ import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../Routes';
 import './FuelDetailsHeader.css'; // Не забудьте создать этот CSS файл
+import photo from '../assets/photo.png'
+
 
 export const Header: FC = () => {
     const navigate = useNavigate();
@@ -11,7 +13,7 @@ export const Header: FC = () => {
         <div className="headerMore">
             <div className="headerMoreFrame">
                 <div className="headerMoreLeftFrame">
-                    <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
+                    <img className="logoImage" src={photo} alt="logo" />
                 </div>
                 
                 {/* ДЕСКТОПНЫЕ КНОПКИ */}

@@ -144,7 +144,6 @@
   padding: 10px 0px 0px;
   gap: 10px;
   width: 100%;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(http://127.0.0.1:9000/ripimages/67b533f8328d3abdd24ae6c571c5c4fd.jpg) center/cover no-repeat;
 }
 
 .myHeaderPanel {

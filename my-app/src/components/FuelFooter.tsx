@@ -1,10 +1,11 @@
 import { type FC } from 'react';
 import './FuelFooter.css';
+import photo from '../assets/photo.png'
 
 export const Footer: FC = () => {
   return (
     <div className="footer">
-      <img className="logoImage" src="http://127.0.0.1:9000/ripimages/photo.png" alt="logo" />
+      <img className="logoImage" src={photo} alt="logo" />
       Расчет энергии сгорания топлива
     </div>
   );
