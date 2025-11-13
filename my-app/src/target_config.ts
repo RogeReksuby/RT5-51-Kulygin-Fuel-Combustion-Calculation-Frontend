@@ -2,8 +2,8 @@
 const target_tauri = true
 
 export const API_BASE_URL = target_tauri 
-  //? 'http://192.168.1.172:8080'  // Для Tauri - прямой IP
-  ? 'http://localhost:8080'
+  ? 'http://192.168.1.172:8080/api'  // Для Tauri - прямой IP
+  //? 'http://localhost:8080'
   : '/api';                       // Для веб - proxy
 
 export const IMAGE_BASE_URL = target_tauri

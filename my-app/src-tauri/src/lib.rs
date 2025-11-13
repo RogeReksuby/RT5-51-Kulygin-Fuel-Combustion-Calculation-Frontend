@@ -1,6 +1,9 @@
+use tauri_plugin_http::reqwest; // ← не обязателен, но хорош для type-check
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
+    .plugin(tauri_plugin_http::init()) // ← добавлено!
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(
