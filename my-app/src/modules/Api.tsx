@@ -1,26 +1,36 @@
 // src/modules/Api.tsx
-
 import { type Fuel, type FuelFilter } from './types';
 import { FUELS_MOCK } from './mockData';
 import { API_BASE_URL } from '../target_config';
 
-// Импортируем плагин HTTP из Tauri
-import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
-
-// Убираем стандартный fetch — будем использовать tauriFetch
+// Проверяем, работаем ли мы в Tauri
+const isTauri = typeof window !== 'undefined' && window.__TAURI__ !== undefined;
 
 export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
   try {
     const queryParams = new URLSearchParams();
     if (filters?.searchQuery) queryParams.append('title', filters.searchQuery);
 
-    // Используем tauriFetch вместо window.fetch
-    const response = await tauriFetch(`${API_BASE_URL}/fuels?${queryParams}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    let response: Response;
+
+    if (isTauri) {
+      // Для Tauri используем плагин HTTP
+      const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
+      response = await tauriFetch(`${API_BASE_URL}/fuels?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } else {
+      // Для веба используем стандартный fetch
+      response = await fetch(`${API_BASE_URL}/fuels?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -40,12 +50,25 @@ export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
 
 export const getFuelById = async (id: number): Promise<Fuel> => {
   try {
-    const response = await tauriFetch(`${API_BASE_URL}/fuels/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    let response: Response;
+
+    if (isTauri) {
+      const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
+      response = await tauriFetch(`${API_BASE_URL}/fuels/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } else {
+      response = await fetch(`${API_BASE_URL}/fuels/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const result = await response.json();
     return result.data;
@@ -57,12 +80,25 @@ export const getFuelById = async (id: number): Promise<Fuel> => {
 
 export const getCombustionCartCount = async (): Promise<number> => {
   try {
-    const response = await tauriFetch(`${API_BASE_URL}/combustions/cart-icon`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    let response: Response;
+
+    if (isTauri) {
+      const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
+      response = await tauriFetch(`${API_BASE_URL}/combustions/cart-icon`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } else {
+      response = await fetch(`${API_BASE_URL}/combustions/cart-icon`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
     return data.count || 0;
