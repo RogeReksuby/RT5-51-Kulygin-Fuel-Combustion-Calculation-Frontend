@@ -1,6 +1,6 @@
 // src/target_config.ts
 // 
-const target_tauri = true
+//const target_tauri = true
 
 // export const API_BASE_URL = target_tauri 
 //   ? 'https://192.168.1.173:8443/api'  // Для Tauri - прямой IP
