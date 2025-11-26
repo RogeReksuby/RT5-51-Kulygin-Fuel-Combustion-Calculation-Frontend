@@ -16,6 +16,10 @@
 //   ? '/web_rip_front/' 
 //   : '/web_rip_front/';
 
-  export const API_BASE_URL = 'https://192.168.1.173:8443/api';                       // Для веб - proxy
-  export const IMAGE_BASE_URL = 'http://192.168.1.173:9000';    
-  export const BASE_PATH = '/web_rip_front/';
+//const target_tauri = false; // Для GitHub Pages
+
+export const API_BASE_URL = 'https://192.168.1.173:8443/api'; // Прямой URL к твоему бекенду
+
+export const IMAGE_BASE_URL = 'http://192.168.1.173:9000';
+
+export const BASE_PATH = '/web_rip_front';
