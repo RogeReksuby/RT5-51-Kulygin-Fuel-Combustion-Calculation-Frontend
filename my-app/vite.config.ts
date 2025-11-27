@@ -16,7 +16,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'https://localhost:8443',
+        target: 'https://52a775198ecc6c.lhr.life',
         changeOrigin: true,
         secure: false,
       },

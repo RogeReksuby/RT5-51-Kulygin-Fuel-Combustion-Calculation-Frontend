@@ -18,8 +18,12 @@
 
 //const target_tauri = false; // Для GitHub Pages
 
-export const API_BASE_URL = 'https://192.168.1.173:8443/api'; // Прямой URL к твоему бекенду
+export const transformImageUrl = (originalUrl: string) => {
+  return originalUrl.replace('http://127.0.0.1:9000', IMAGE_BASE_URL);
+};
 
-export const IMAGE_BASE_URL = 'http://192.168.1.173:9000';
+export const API_BASE_URL = 'https://52a775198ecc6c.lhr.life/api'; // Прямой URL к твоему бекенду
+
+export const IMAGE_BASE_URL = 'https://52a775198ecc6c.lhr.life/minio';
 
 export const BASE_PATH = '/web_rip_front';

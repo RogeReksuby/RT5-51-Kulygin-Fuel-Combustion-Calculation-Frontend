@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 import './FuelCard.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
+import { IMAGE_BASE_URL } from '../target_config';
 
 interface Props {
   id: number;
@@ -11,6 +12,10 @@ interface Props {
   //onAddToCombustion: (id: number) => void;
 }
 
+const transformImageUrl = (originalUrl: string) => {
+  return originalUrl.replace('http://127.0.0.1:9000', IMAGE_BASE_URL);
+};
+
 export const FuelCard: FC<Props> = ({ 
   id, 
   title, 
@@ -19,7 +24,7 @@ export const FuelCard: FC<Props> = ({
   onDetailsClick, 
 }) => (
   <div className="card" style={{
-    background: `linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${card_image || DefaultImage}) center/cover no-repeat`
+    background: `linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${transformImageUrl(card_image) || DefaultImage}) center/cover no-repeat`
   }}>
     {/* ДЕСКТОПНАЯ СТРУКТУРА */}
     <div className="cardTop">

@@ -8,6 +8,7 @@ import { Footer } from '../components/FuelFooter';
 import { Breadcrumbs } from '../components/BreadCrumbs';
 import './FuelDetailPage.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
+import { IMAGE_BASE_URL, transformImageUrl } from '../target_config';
 
 export const FuelDetailPage: FC = () => {
   const [fuel, setFuel] = useState<Fuel | null>(null);
@@ -19,6 +20,7 @@ export const FuelDetailPage: FC = () => {
       .then(setFuel);
   }, [id]);
 
+
   return (
     <div>
       <Header/>
@@ -26,7 +28,7 @@ export const FuelDetailPage: FC = () => {
       {fuel ? (
         <div className="contentMore">
           <div className="contentMoreFrame">
-            <img className="cardMoreImage" src={fuel.card_image || DefaultImage} alt="card image" />
+            <img className="cardMoreImage" src={transformImageUrl(fuel.card_image) || DefaultImage} alt="card image" />
             <div className="textsMore">
               <div className="titleHeatMore">
                 <div className="titleMore">
