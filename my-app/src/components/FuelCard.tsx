@@ -41,6 +41,12 @@ export const FuelCard: FC<Props> = ({
       // Обновляем данные корзины (чтобы обновился счетчик)
       await dispatch(getCartData()).unwrap();
       
+      // Ждем немного и обновляем корзину
+      setTimeout(() => {
+        dispatch(getCartData());
+        console.log("grgg")
+      }, 5000);
+
       // Можно показать уведомление об успехе
       console.log(`Топливо "${title}" добавлено в заявку`);
     } catch (error) {

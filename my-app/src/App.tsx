@@ -6,7 +6,9 @@ import LoginPage from "./pages/LoginPage";
 import { ROUTES } from "../Routes";
 import { BASE_PATH } from "./target_config";
 import AppInitializer from "./components/AppInitializer";
+import FuelCombustionPage from "./pages/FuelCombustionPage";
 import "./App.css";
+
 
 
 
@@ -19,6 +21,7 @@ function App() {
         <Route path={ROUTES.FUELS} element={<FuelsPage />} />
         <Route path={`${ROUTES.FUELS}/:id`} element={<FuelDetailPage />} />
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+        <Route path={ROUTES.APPLICATION_DETAIL} element={<FuelCombustionPage />} />
       </Routes>
     </BrowserRouter>
   );

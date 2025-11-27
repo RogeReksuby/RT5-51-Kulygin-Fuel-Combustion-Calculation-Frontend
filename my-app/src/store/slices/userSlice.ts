@@ -19,14 +19,22 @@ const initialState: UserState = {
 // Асинхронное действие для логина
 export const loginUser = createAsyncThunk(
   'user/login',
-  async (credentials: HandlerLoginRequest, { rejectWithValue, dispatch }) => {
+  async (credentials: HandlerLoginRequest, { rejectWithValue }) => {
     try {
       const response = await api.api.usersLoginCreate(credentials);
       
       // Сохраняем токен
       const token = response.data.access_token || null;
       setAuthToken(token);
+      
+      console.log('🔐 Токен получен:', token);
+      console.log('💾 Сохраняем в localStorage...');
+      
       localStorage.setItem('token', token || '');
+      
+      // ПРОВЕРКА: читаем обратно
+      const savedToken = localStorage.getItem('token');
+      console.log('📖 Токен из localStorage:', savedToken);
       
       return response.data.user || null;
     } catch (error: any) {
@@ -50,25 +58,30 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-// Проверка авторизации при загрузке приложения
 export const checkAuth = createAsyncThunk(
   'user/checkAuth',
-  async (_, { rejectWithValue, dispatch }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
+      console.log('🔐 checkAuth: токен из localStorage:', token);
+      
       if (!token) {
-        return null;
+        console.log('❌ checkAuth: токен не найден');
+        return rejectWithValue('No token');
       }
 
       // Устанавливаем токен
       setAuthToken(token);
+      console.log('✅ checkAuth: токен установлен в axios');
       
-      // Проверяем валидность токена через запрос профиля
+      // Проверяем валидность токена
+      console.log('🔍 checkAuth: проверяем профиль...');
       const response = await api.api.usersProfileList();
+      console.log('✅ checkAuth: профиль загружен:', response.data);
       
       return response.data;
     } catch (error: any) {
-      // Если токен невалидный, очищаем его
+      console.error('❌ checkAuth: ошибка:', error);
       setAuthToken(null);
       localStorage.removeItem('token');
       return rejectWithValue('Токен устарел');

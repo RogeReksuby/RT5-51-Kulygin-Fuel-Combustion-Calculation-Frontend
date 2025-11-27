@@ -6,7 +6,7 @@ import { Breadcrumbs } from '../components/BreadCrumbs';
 import { FuelCard } from '../components/FuelCard';
 import { ROUTES } from '../../Routes';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // Хук для отправки писем
+import { useDispatch, useSelector } from 'react-redux'; // Хук для отправки писем
 import { 
   useSearchQuery,     // Хук для чтения поискового запроса
   setSearchQuery,     // Действие для изменения поиска
@@ -26,6 +26,8 @@ const FuelsPage: FC = () => {
   const dispatch = useDispatch();
   // 2. Читаем данные из почтового отделения
   const searchQuery = useSearchQuery()
+
+  
 
   const [fuels, setFuels] = useState<Fuel[]>([]);
   const [cartCount, setCartCount] = useState(0);

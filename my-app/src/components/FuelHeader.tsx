@@ -33,6 +33,8 @@ export const Header: FC<HeaderProps> = ({
     dispatch(clearCart()); // Очищаем корзину
     dispatch(resetFilters()); // Сбрасываем фильтры
     setIsMenuOpen(false); // Закрываем меню
+
+    navigate('/');
   };
 
   // Обработчик перехода в корзину
@@ -93,7 +95,7 @@ export const Header: FC<HeaderProps> = ({
                   {/* ПРОФИЛЬ И ВЫХОД */}
                   <div className="user-dropdown">
                     <button className="bButton user-button">
-                      👋 {user?.name || user?.login || 'Профиль'}
+                      {user?.name || user?.login || 'Профиль'}
                     </button>
                     <div className="dropdown-menu">
                       <button 

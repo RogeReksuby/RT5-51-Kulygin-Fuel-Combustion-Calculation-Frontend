@@ -24,6 +24,7 @@ export const Header: FC = () => {
         dispatch(clearCart()); // Очищаем корзину
         dispatch(resetFilters()); // Сбрасываем фильтры
         setIsMenuOpen(false); // Закрываем меню
+        navigate('/');
     };
 
     // Обработчик перехода в корзину
