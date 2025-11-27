@@ -44,12 +44,13 @@ export const Header: FC = () => {
                 
                 {/* ДЕСКТОПНЫЕ КНОПКИ */}
                 <div className="headerMoreDesktopNav">
-                    <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
-                        Виды топлива
-                    </button>
                     <button className="bButton" onClick={() => navigate(ROUTES.HOME)}>
-                        Главная
+                        Домой
                     </button>
+                    <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
+                        Топливо
+                    </button>
+                    
                     
                     {/* КНОПКИ ДЛЯ АВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ */}
                     {isAuthenticated ? (

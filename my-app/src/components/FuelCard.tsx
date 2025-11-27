@@ -12,6 +12,7 @@ interface Props {
   heat: number;
   card_image: string;
   onDetailsClick: (id: number) => void;
+  onFuelAdded?: () => void;
 }
 
 export const FuelCard: FC<Props> = ({ 
@@ -20,6 +21,7 @@ export const FuelCard: FC<Props> = ({
   heat, 
   card_image, 
   onDetailsClick, 
+  onFuelAdded,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   
@@ -38,14 +40,9 @@ export const FuelCard: FC<Props> = ({
       // Добавляем топливо в заявку
       await dispatch(addFuelToApplication(id)).unwrap();
       
-      // Обновляем данные корзины (чтобы обновился счетчик)
-      await dispatch(getCartData()).unwrap();
-      
-      // Ждем немного и обновляем корзину
-      setTimeout(() => {
-        dispatch(getCartData());
-        console.log("grgg")
-      }, 5000);
+      if (onFuelAdded) {
+        onFuelAdded();
+      }
 
       // Можно показать уведомление об успехе
       console.log(`Топливо "${title}" добавлено в заявку`);
