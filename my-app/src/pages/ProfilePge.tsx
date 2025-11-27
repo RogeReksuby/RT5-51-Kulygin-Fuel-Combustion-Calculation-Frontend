@@ -7,6 +7,7 @@ import { Footer } from '../components/FuelFooter';
 import { ROUTES } from '../../Routes';
 import type { RootState } from '../store';
 import './ProfilePage.css';
+import { Breadcrumbs } from '../components/BreadCrumbs';
 
 // Интерфейс для данных, которые приходят ОТ бэкенда
 interface BackendUserProfile {
@@ -41,7 +42,6 @@ useEffect(() => {
   // Даем время на проверку авторизации
   const checkAuthAndLoad = setTimeout(() => {
     if (!isAuthenticated) {
-      console.log('🚫 Пользователь не авторизован, редирект на логин');
       navigate(ROUTES.LOGIN);
       return;
     }
@@ -66,14 +66,13 @@ useEffect(() => {
       setLoading(true);
       setError(null);
       
-      console.log('📥 Загружаем данные профиля...');
 
       const response = await api.api.usersProfileList();
-      console.log('📦 Полный ответ профиля:', response);
+
       
       // Получаем данные из правильного поля
       const backendData = response.data.data;
-      console.log('📦 Данные пользователя:', backendData);
+
       
       const profileData: BackendUserProfile = {
         id: backendData.id,
@@ -90,9 +89,8 @@ useEffect(() => {
         login: backendData.login || '',
       });
       
-      console.log('✅ Профиль загружен:', profileData);
     } catch (error: any) {
-      console.error('❌ Ошибка загрузки профиля:', error);
+
       setError('Не удалось загрузить данные профиля');
     } finally {
       setLoading(false);
@@ -117,20 +115,17 @@ useEffect(() => {
       setError(null);
       setSuccess(null);
 
-      console.log('💾 Сохраняем изменения профиля:', formData);
-
       // Создаем объект для отправки в правильном формате
       const updateData: UpdateProfileData = {
         login: formData.login,
         name: formData.name, // Отправляем как 'name' (с маленькой) как ожидает бэкенд
       };
 
-      console.log('📤 Отправляем данные:', updateData);
 
       // Используем type assertion чтобы обойти проверку типов
       await api.api.usersProfileUpdate(updateData as any);
 
-      console.log('✅ Профиль обновлен');
+      console.log('Профиль обновлен');
       
       setSuccess('Данные успешно сохранены!');
       
@@ -138,7 +133,7 @@ useEffect(() => {
       await loadProfile();
       
     } catch (error: any) {
-      console.error('❌ Ошибка сохранения профиля:', error);
+      console.error('Ошибка сохранения профиля:', error);
       setError(error.response?.data?.description || 'Не удалось сохранить данные');
     } finally {
       setSaving(false);
@@ -163,7 +158,7 @@ useEffect(() => {
   return (
     <div>
       <Header />
-      
+      <Breadcrumbs />
       <div className="profile-container">
         <h1 className="profile-title">Личный кабинет</h1>
 

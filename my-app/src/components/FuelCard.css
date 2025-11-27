@@ -1,3 +1,4 @@
+/* FuelCard.css */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -36,6 +37,11 @@
     order: 0;
     flex-grow: 0;
     position: relative;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
 }
 
 /* ДЕСКТОПНАЯ СТРУКТУРА */
@@ -43,11 +49,11 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     padding: 10px;
     gap: 10px;
-    width: 380px;
+    width: 100%;
     flex: none;
     order: 0;
     align-self: stretch;
@@ -59,20 +65,18 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 20px 10px;
+    padding: 10px;
     gap: 10px;
-    width: 180px;
-    height: 73px;
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 1;
+    flex: 1;
+    min-width: 0;
     font-family: 'Manrope';
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
-    line-height: 33px;
+    line-height: 1.3;
     color: #FFFFFF;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* ОСНОВНОЙ КОНТЕНТ КАРТОЧКИ */
@@ -84,27 +88,29 @@
     width: 100%;
     flex-grow: 1;
     gap: 10px;
+    margin-top: auto;
 }
 
 .cardBottom {
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
     gap: 10px;
-    width: 380px;
+    width: 100%;
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 0;
     font-family: 'Manrope';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 32px;
-    line-height: 44px;
+    line-height: 1.2;
     color: #FFFFFF;
-    justify-content: center;
+    text-align: center;
 }
 
 /* СЕКЦИЯ ДОБАВЛЕНИЯ В ЗАЯВКУ */
@@ -115,7 +121,7 @@
     align-items: center;
     padding: 10px;
     gap: 10px;
-    width: 380px;
+    width: 100%;
     flex: none;
     order: 2;
     align-self: stretch;
@@ -126,25 +132,31 @@
     background: #28a745;
     color: white;
     border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
+    padding: 12px 20px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
     width: 100%;
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Manrope';
-    font-weight: 500;
+    font-weight: 600;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .addToApplicationBtn:hover:not(:disabled) {
     background: #218838;
     transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .addToApplicationBtn:disabled {
     background: #6c757d;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
 .addToApplicationBtn.loading {
@@ -154,28 +166,57 @@
 
 .loginPrompt {
     text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
     font-style: italic;
-    font-size: 12px;
+    font-size: 14px;
     font-family: 'Manrope';
     width: 100%;
+    padding: 8px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
 }
 
-/* ДЕСКТОПНАЯ КНОПКА - справа */
+/* ДЕСКТОПНАЯ КНОПКА - справа (ГОЛУБАЯ) */
 .cardButtonDesktop {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     padding: 10px;
     gap: 10px;
-    width: 170px;
-    flex: none;
-    order: 1;
-    flex-grow: 0;
+    flex-shrink: 0;
 }
 
-/* МОБИЛЬНАЯ КНОПКА - внизу (по умолчанию скрыта) */
+.cardButtonDesktop button {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    gap: 10px;
+    min-width: 150px;
+    min-height: 44px;
+    flex: none;
+    background: #0F94CF; /* ГОЛУБОЙ ЦВЕТ */
+    border: 2px solid #0F94CF;
+    border-radius: 6px;
+    color: white;
+    font-family: 'Manrope';
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cardButtonDesktop button:hover {
+    background: #0d7bb0; /* Темнее при наведении */
+    border-color: #0d7bb0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(15, 148, 207, 0.3);
+}
+
+/* МОБИЛЬНАЯ КНОПКА - внизу (ГОЛУБАЯ) */
 .cardButtonMobile {
     display: none;
     box-sizing: border-box;
@@ -185,28 +226,61 @@
     order: 3;
 }
 
-/* СТИЛИ ДЛЯ ОБЕИХ КНОПОК */
-.cardButtonDesktop button,
 .cardButtonMobile button {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
     gap: 10px;
-    width: 170px;
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-}
-
-/* МОБИЛЬНАЯ КНОПКА - полная ширина */
-.cardButtonMobile button {
     width: 100%;
+    min-height: 50px;
+    background: #0F94CF; /* ГОЛУБОЙ ЦВЕТ */
+    border: 2px solid #0F94CF;
+    border-radius: 6px;
+    color: white;
+    font-family: 'Manrope';
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-/* ===== МЕДИА-ЗАПРОСЫ ДЛЯ МОБИЛЬНЫХ ===== */
-@media screen and (max-width: 480px) {
+.cardButtonMobile button:hover {
+    background: #0d7bb0; /* Темнее при наведении */
+    border-color: #0d7bb0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(15, 148, 207, 0.3);
+}
+
+/* ===== АДАПТИВНОСТЬ ДЛЯ ПЛАНШЕТОВ ===== */
+@media screen and (max-width: 1024px) {
+    .content {
+        padding: 0 50px;
+        gap: 20px;
+        justify-content: center;
+    }
+    
+    .card {
+        width: calc(50% - 20px);
+        max-width: 400px;
+        min-width: 300px;
+        height: 320px;
+    }
+    
+    .cardTitle {
+        font-size: 22px !important;
+        line-height: 1.3 !important;
+    }
+    
+    .cardBottom {
+        font-size: 28px !important;
+    }
+}
+
+/* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ ===== */
+@media screen and (max-width: 768px) {
     .content {
         padding: 0 20px;
         gap: 15px;
@@ -216,13 +290,13 @@
         width: 100%;
         max-width: 400px;
         min-width: 280px;
-        height: 320px; /* ↑ Увеличили высоту для новых элементов */
+        height: 350px;
     }
     
     .cardTop {
-        width: 100%;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
+        align-items: center;
     }
     
     .cardTitle {
@@ -230,26 +304,17 @@
         text-align: center;
         font-size: 24px !important;
         line-height: 1.3 !important;
-        height: auto;
-        padding: 15px 10px !important;
-        font-weight: 700;
+        padding: 10px 5px !important;
     }
     
     .cardBottom {
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        font-size: 36px !important;
+        font-size: 32px !important;
         line-height: 1.2 !important;
-        order: 1;
-        font-weight: 600;
-        padding: 5px 10px;
+        padding: 15px 10px;
     }
     
     .cardApplicationSection {
-        width: 100%;
-        padding: 5px 10px;
-        order: 2;
+        padding: 10px;
     }
     
     .cardButtonDesktop {
@@ -258,29 +323,88 @@
     
     .cardButtonMobile {
         display: flex !important;
-        order: 3;
-        padding: 5px 10px;
+        padding: 10px;
     }
     
-    .cardButtonMobile button {
-        width: 100%;
-        font-size: 18px !important;
-        padding: 14px !important;
-        font-weight: 700;
+    .addToApplicationBtn {
+        padding: 14px 20px;
+        font-size: 18px;
+        min-height: 50px;
+    }
+    
+    .loginPrompt {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+/* ===== МАЛЕНЬКИЕ МОБИЛЬНЫЕ ===== */
+@media screen and (max-width: 480px) {
+    .content {
+        padding: 0 15px;
+        gap: 12px;
+    }
+    
+    .card {
+        height: 340px;
+        padding: 8px;
+    }
+    
+    .cardTitle {
+        font-size: 22px !important;
+        padding: 8px 5px !important;
+    }
+    
+    .cardBottom {
+        font-size: 28px !important;
+        padding: 10px 5px;
+    }
+    
+    .cardApplicationSection {
+        padding: 8px;
     }
     
     .addToApplicationBtn {
         padding: 12px 16px;
         font-size: 16px;
+        min-height: 44px;
     }
     
     .loginPrompt {
         font-size: 14px;
+        padding: 10px;
+    }
+    
+    .cardButtonMobile button {
+        padding: 12px 16px;
+        font-size: 16px;
+        min-height: 44px;
+    }
+}
+
+/* ===== ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ ===== */
+@media screen and (max-width: 360px) {
+    .card {
+        height: 320px;
+    }
+    
+    .cardTitle {
+        font-size: 20px !important;
+    }
+    
+    .cardBottom {
+        font-size: 24px !important;
+    }
+    
+    .addToApplicationBtn,
+    .cardButtonMobile button {
+        font-size: 15px;
+        padding: 10px 14px;
     }
 }
 
 /* ===== ДЕСКТОП - СКРЫВАЕМ МОБИЛЬНУЮ КНОПКУ ===== */
-@media screen and (min-width: 481px) {
+@media screen and (min-width: 769px) {
     .cardButtonDesktop {
         display: flex !important;
     }
@@ -290,45 +414,26 @@
     }
 }
 
-/* ===== АДАПТИВ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ (1366px и ниже) ===== */
-@media screen and (max-width: 1366px) {
+/* ===== АДАПТИВ ДЛЯ СРЕДНИХ ЭКРАНОВ ===== */
+@media screen and (min-width: 769px) and (max-width: 1366px) {
     .content {
         padding: 0 30px;
-        gap: 20px;
+        gap: 25px;
     }
 
     .card {
-        width: 100%;
-        max-width: 360px;
-        min-width: 280px;
+        width: calc(33.333% - 30px);
+        max-width: 380px;
+        min-width: 250px;
         height: 320px;
     }
 
-    .cardTop {
-        width: 100%;
-        flex-direction: column;
-        gap: 15px;
-    }
-
     .cardTitle {
-        width: 100%;
-        flex: 1;
-        min-width: 0;
-        text-align: center;
-        font-size: 22px !important;
-        padding: 15px 10px !important;
-        line-height: 1.3;
+        font-size: 20px !important;
+        line-height: 1.3 !important;
     }
 
-    .cardButtonDesktop {
-        display: none !important;
-    }
-
-    .cardButtonMobile {
-        display: flex !important;
-    }
-
-    .cardButtonMobile button {
-        width: 100%;
+    .cardBottom {
+        font-size: 28px !important;
     }
 }

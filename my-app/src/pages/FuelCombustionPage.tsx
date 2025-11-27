@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../store';
+import { /*useDispatch, */useSelector } from 'react-redux';
+import type { /*AppDispatch,*/ RootState } from '../store';
 import { api } from '../api';
 import { Header } from '../components/FuelDetailsHeader';
 import { Footer } from '../components/FuelFooter';
@@ -9,6 +9,7 @@ import { ROUTES } from '../../Routes';
 import { transformImageUrl } from '../target_config';
 import DefaultImage from '../assets/DefaultImage.jpg';
 import './FuelCombustionPage.css';
+import { Breadcrumbs } from '../components/BreadCrumbs';
 
 
 // Типы данных от API
@@ -47,7 +48,7 @@ interface ApiResponse {
 const ApplicationPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  //const dispatch = useDispatch<AppDispatch>();
   
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   
@@ -62,7 +63,6 @@ const ApplicationPage: FC = () => {
   // Даем время на проверку авторизации
   const checkAuthAndLoad = setTimeout(() => {
     if (!isAuthenticated) {
-      console.log('🚫 Пользователь не авторизован, редирект на логин');
       navigate(ROUTES.LOGIN);
       return;
     }
@@ -99,15 +99,12 @@ const ApplicationPage: FC = () => {
       setLoading(true);
       setError(null);
       
-      console.log('📥 Загружаем заявку ID:', applicationId);
       
       const response = await api.api.combustionsDetail(applicationId);
-      console.log('📦 Данные ответа:', response.data);
       
       const apiResponse = response.data as ApiResponse;
       const appData = apiResponse.data;
       
-      console.log('📦 Данные заявки:', appData);
       
       setApplication(appData);
       
@@ -118,7 +115,7 @@ const ApplicationPage: FC = () => {
       }
       
     } catch (error: any) {
-      console.error('❌ Ошибка загрузки заявки:', error);
+      console.error('Ошибка загрузки заявки:', error);
       setError('Не удалось загрузить данные заявки');
       setApplication(null);
     } finally {
@@ -133,7 +130,6 @@ const ApplicationPage: FC = () => {
     const volumeValue = parseFloat(newVolume) || 0; // 0 по умолчанию
     
     try {
-      console.log('📝 Обновляем объем топлива:', fuelId, volumeValue);
       
       await api.api.fuelCombustionsUpdate({
         fuel_id: fuelId,
@@ -148,9 +144,9 @@ const ApplicationPage: FC = () => {
       
       setApplication({ ...application, Fuels: updatedFuels });
       
-      console.log('✅ Объем топлива обновлен');
+      console.log('Объем топлива обновлен');
     } catch (error: any) {
-      console.error('❌ Ошибка обновления объема:', error);
+      console.error('Ошибка обновления объема:', error);
       alert('Не удалось обновить объем топлива');
     }
   };
@@ -167,9 +163,9 @@ const ApplicationPage: FC = () => {
       
       await api.api.combustionsUpdate(Number(id), { molar_volume: molarValue });
       
-      console.log('✅ Молярный объем обновлен');
+      console.log('Молярный объем обновлен');
     } catch (error: any) {
-      console.error('❌ Ошибка обновления молярного объема:', error);
+      console.error('Ошибка обновления молярного объема:', error);
       alert('Не удалось обновить молярный объем');
     }
   };
@@ -184,10 +180,10 @@ const ApplicationPage: FC = () => {
         
         await api.api.combustionsDelete();
         
-        console.log('✅ Заявка удалена');
+        console.log('Заявка удалена');
         navigate(ROUTES.FUELS);
       } catch (error: any) {
-        console.error('❌ Ошибка удаления заявки:', error);
+        console.error('Ошибка удаления заявки:', error);
         alert('Не удалось удалить заявку');
       }
     }
@@ -198,17 +194,17 @@ const ApplicationPage: FC = () => {
     if (!id || !application) return;
     
     try {
-      console.log('📤 Отправляем заявку на расчет:', id);
+
       
       await api.api.combustionsFormUpdate(Number(id));
       
-      console.log('✅ Заявка отправлена на расчет');
+      console.log('Заявка отправлена на расчет');
       
       await loadApplicationData(Number(id));
       
       alert('Заявка успешно отправлена на расчет!');
     } catch (error: any) {
-      console.error('❌ Ошибка отправки заявки:', error);
+      console.error('Ошибка отправки заявки:', error);
       alert('Не удалось отправить заявку на расчет');
     }
   };
@@ -219,16 +215,16 @@ const ApplicationPage: FC = () => {
     
     if (window.confirm('Удалить это топливо из заявки?')) {
       try {
-        console.log('🗑️ Удаляем топлива из заявки:', fuelId);
+
         
         await api.api.fuelCombustionsDelete({ fuel_id: fuelId });
         
         const updatedFuels = application.Fuels?.filter(fuel => fuel.id !== fuelId) || [];
         setApplication({ ...application, Fuels: updatedFuels });
         
-        console.log('✅ Топливо удалено из заявки');
+        console.log('Топливо удалено из заявки');
       } catch (error: any) {
-        console.error('❌ Ошибка удаления топлива:', error);
+        console.error('Ошибка удаления топлива:', error);
         alert('Не удалось удалить топливо из заявки');
       }
     }
@@ -313,7 +309,7 @@ const ApplicationPage: FC = () => {
   return (
     <div>
       <Header />
-      
+      <Breadcrumbs />
       <div className="titleReq">Состав заявки #{application.ID}</div>
 
       {/* Кнопки управления */}

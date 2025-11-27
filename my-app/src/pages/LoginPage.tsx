@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Header } from '../components/FuelDetailsHeader';
 import './LoginPage.css';
 import { ROUTES } from '../../Routes';
+import { Breadcrumbs } from '../components/BreadCrumbs';
 
 const LoginPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -64,7 +65,7 @@ const LoginPage: React.FC = () => {
   return (
     <div>
       <Header />
-      
+      <Breadcrumbs />
       <div className="login-container">
         <h1 className="login-title">Вход в систему</h1>
         

@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
-import { addFuelToApplication, getCartData } from '../store/slices/applicationsSlice';
+import { addFuelToApplication } from '../store/slices/applicationsSlice';
 import './FuelCard.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
 import { transformImageUrl } from '../target_config';
@@ -25,11 +25,9 @@ export const FuelCard: FC<Props> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   
-  // Получаем состояние авторизации и загрузки
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const { loading } = useSelector((state: RootState) => state.applications);
 
-  // Обработчик добавления в заявку
   const handleAddToApplication = async () => {
     if (!isAuthenticated) {
       alert('Для добавления в заявку необходимо авторизоваться');
@@ -37,14 +35,12 @@ export const FuelCard: FC<Props> = ({
     }
 
     try {
-      // Добавляем топливо в заявку
       await dispatch(addFuelToApplication(id)).unwrap();
       
       if (onFuelAdded) {
         onFuelAdded();
       }
 
-      // Можно показать уведомление об успехе
       console.log(`Топливо "${title}" добавлено в заявку`);
     } catch (error) {
       console.error('Ошибка при добавлении в заявку:', error);
@@ -87,7 +83,7 @@ export const FuelCard: FC<Props> = ({
               onClick={handleAddToApplication}
               disabled={loading}
             >
-              {loading ? '⏳ Добавляем...' : '➕ В заявку'}
+              {loading ? 'Добавление...' : 'В заявку'}
             </button>
           ) : (
             <div className="loginPrompt">

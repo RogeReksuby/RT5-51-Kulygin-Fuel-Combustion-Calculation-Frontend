@@ -10,21 +10,19 @@ const AppInitializer: React.FC = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    console.log('🚀 AppInitializer: проверка авторизации...');
     
     const token = localStorage.getItem('token');
-    console.log('🔐 Токен в localStorage:', token);
+    
     
     if (token) {
-      console.log('✅ Токен найден, запускаем checkAuth...');
       dispatch(checkAuth());
     } else {
-      console.log('❌ Токен не найден в localStorage');
+      console.log('Токен не найден в localStorage');
     }
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('🔄 Статус авторизации изменился:', isAuthenticated);
+    console.log('Статус авторизации изменился:', isAuthenticated);
   }, [isAuthenticated]);
 
   return null;

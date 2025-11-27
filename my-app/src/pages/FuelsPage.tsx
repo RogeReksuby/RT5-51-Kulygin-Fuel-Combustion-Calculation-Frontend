@@ -41,7 +41,7 @@ const FuelsPage: FC = () => {
       const cartData = await getCombustionCartCount();
       setCartCount(cartData.count || 0);
       setCartAppId(cartData.app_id);
-      console.log('🛒 Cart data loaded:', cartData);
+      console.log('Cart data loaded:', cartData);
     } catch (error) {
       console.error('Error loading cart count:', error);
       setCartCount(0);
@@ -51,17 +51,15 @@ const FuelsPage: FC = () => {
   // ОБРАБОТЧИК КЛИКА НА КОРЗИНУ
   const handleCartClick = () => {
     if (cartAppId && cartCount > 0) {
-      console.log('✅ Переход к заявке:', cartAppId);
       navigate(`${ROUTES.APPLICATIONS}/${cartAppId}`);
     } else {
-      console.log('❌ Корзина пуста или app_id отсутствует');
+      console.log('Корзина пуста или app_id отсутствует');
       alert('Корзина пуста или заявка не создана');
     }
   };
 
   // ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ КОРЗИНЫ ПОСЛЕ ДОБАВЛЕНИЯ ТОПЛИВА
   const refreshCart = async () => {
-    console.log('🔄 Обновляем данные корзины...');
     await loadCartCount();
   };
 

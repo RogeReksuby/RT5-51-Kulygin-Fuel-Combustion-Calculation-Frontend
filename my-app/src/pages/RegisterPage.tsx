@@ -7,6 +7,8 @@ import { Header } from '../components/FuelDetailsHeader';
 import { ROUTES } from '../../Routes';
 import { api } from '../api';
 import './RegisterPage.css';
+import { Breadcrumb } from 'react-bootstrap';
+import { Breadcrumbs } from '../components/BreadCrumbs';
 
 const RegisterPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -126,7 +128,7 @@ const RegisterPage: React.FC = () => {
   return (
     <div>
       <Header />
-      
+      <Breadcrumbs />
       <div className="register-container">
         <h1 className="register-title">Регистрация</h1>
         

@@ -63,25 +63,24 @@ export const checkAuth = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      console.log('🔐 checkAuth: токен из localStorage:', token);
       
       if (!token) {
-        console.log('❌ checkAuth: токен не найден');
+        console.log('checkAuth: токен не найден');
         return rejectWithValue('No token');
       }
 
       // Устанавливаем токен
       setAuthToken(token);
-      console.log('✅ checkAuth: токен установлен в axios');
+
       
       // Проверяем валидность токена
-      console.log('🔍 checkAuth: проверяем профиль...');
+
       const response = await api.api.usersProfileList();
-      console.log('✅ checkAuth: профиль загружен:', response.data);
+
       
       return response.data;
     } catch (error: any) {
-      console.error('❌ checkAuth: ошибка:', error);
+      console.error('checkAuth: ошибка:', error);
       setAuthToken(null);
       localStorage.removeItem('token');
       return rejectWithValue('Токен устарел');

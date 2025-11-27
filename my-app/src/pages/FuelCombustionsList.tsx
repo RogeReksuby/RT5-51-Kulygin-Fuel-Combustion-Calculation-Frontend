@@ -8,6 +8,7 @@ import { Footer } from '../components/FuelFooter';
 import { ROUTES } from '../../Routes';
 import type { RootState } from '../store';
 import './FuelCombustionsList.css';
+import { Breadcrumbs } from '../components/BreadCrumbs';
 
 // Используем тип из сгенерированного API
 interface Application extends DsCombustionResponse {
@@ -27,14 +28,29 @@ const ApplicationsPage: FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate(ROUTES.LOGIN);
-      return;
-    }
+    useEffect(() => {
+    // Даем время на проверку авторизации
+    const checkAuthAndLoad = setTimeout(() => {
+        if (!isAuthenticated) {
+        navigate(ROUTES.LOGIN);
+        return;
+        }
 
-    loadApplications();
-  }, [isAuthenticated, navigate]);
+        loadApplications();
+    }, 1000); // Небольшая задержка
+
+    return () => clearTimeout(checkAuthAndLoad);
+    }, [isAuthenticated, navigate]);
+
+
+//   useEffect(() => {
+//     if (!isAuthenticated) {
+//       navigate(ROUTES.LOGIN);
+//       return;
+//     }
+
+//     loadApplications();
+//   }, [isAuthenticated, navigate]);
 
   const loadApplications = async () => {
     try {
@@ -54,13 +70,10 @@ const ApplicationsPage: FC = () => {
         queryParams.end_date = endDate;
       }
 
-      console.log('📥 Загружаем список заявок с фильтрами:', queryParams);
 
       // РЕАЛЬНЫЙ API ВЫЗОВ
       const response = await api.api.combustionsList(queryParams);
 
-      console.log('📦 Полный ответ API:', response);
-      console.log('📦 Данные ответа:', response.data);
       
       // API возвращает Record<string, DsCombustionResponse[]>
       // Нужно извлечь массив заявок
@@ -72,9 +85,9 @@ const ApplicationsPage: FC = () => {
       
       setApplications(applicationsArray);
       
-      console.log('✅ Заявки загружены:', applicationsArray.length);
+      console.log('Заявки загружены:', applicationsArray.length);
     } catch (error: any) {
-      console.error('❌ Ошибка загрузки заявок:', error);
+      console.error('Ошибка загрузки заявок:', error);
       setError('Не удалось загрузить список заявок');
       setApplications([]);
     } finally {
@@ -135,7 +148,7 @@ const ApplicationsPage: FC = () => {
   return (
     <div>
       <Header />
-      
+      <Breadcrumbs/>
       <div className="applications-container">
         <h1 className="applications-title">Мои заявки</h1>
 
