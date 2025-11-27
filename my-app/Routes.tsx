@@ -3,8 +3,8 @@ export const ROUTES = {
   FUELS: "/fuels",
   LOGIN: "/login",
   REGISTER: "/register",
-  APPLICATIONS: "/applications",
-  APPLICATION_DETAIL: "/applications/:id",
+  APPLICATIONS: "/combustions",
+  APPLICATION_DETAIL: "/combustions/:id",
   PROFILE: "/profile",
 };
 

@@ -2,23 +2,22 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
 import { loginUser, clearError } from '../store/slices/userSlice';
-import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/FuelDetailsHeader'
+import { Link, useNavigate } from 'react-router-dom';
+import { Header } from '../components/FuelDetailsHeader';
+import './LoginPage.css';
+import { ROUTES } from '../../Routes';
 
 const LoginPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   
-  // Получаем состояние из Redux store
   const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.user);
   
-  // Локальное состояние для формы
   const [formData, setFormData] = useState({
     login: '',
     password: '',
   });
 
-  // Обработчик изменения полей формы
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -26,13 +25,11 @@ const LoginPage: React.FC = () => {
       [name]: value,
     }));
     
-    // Очищаем ошибку при начале ввода
     if (error) {
       dispatch(clearError());
     }
   };
 
-  // Обработчик отправки формы
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -40,24 +37,22 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    // Отправляем запрос на авторизацию
     const result = await dispatch(loginUser(formData));
     
-    // Если авторизация успешна, переходим на главную
     if (loginUser.fulfilled.match(result)) {
       navigate('/');
     }
   };
 
-  // Если пользователь уже авторизован, показываем сообщение
   if (isAuthenticated) {
     return (
-      <div className="container mt-5">
+      <div className="login-container">
+        <Header />
         <div className="alert alert-info">
           Вы уже авторизованы!
         </div>
         <button 
-          className="btn btn-primary"
+          className="home-button"
           onClick={() => navigate('/')}
         >
           На главную
@@ -67,28 +62,29 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="container mt-5">
-        <Header/>
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <h2 className="text-center mb-4">Вход в систему</h2>
+    <div>
+      <Header />
+      
+      <div className="login-container">
+        <h1 className="login-title">Вход в систему</h1>
+        
+        <div className="login-card">
+          <h2>Авторизация</h2>
           
-          {/* Сообщение об ошибке */}
           {error && (
             <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}
           
-          {/* Форма логина */}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="login" className="form-label">
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <label htmlFor="login">
                 Логин
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-input"
                 id="login"
                 name="login"
                 value={formData.login}
@@ -99,13 +95,13 @@ const LoginPage: React.FC = () => {
               />
             </div>
             
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
+            <div className="form-group">
+              <label htmlFor="password">
                 Пароль
               </label>
               <input
                 type="password"
-                className="form-control"
+                className="form-input"
                 id="password"
                 name="password"
                 value={formData.password}
@@ -118,18 +114,22 @@ const LoginPage: React.FC = () => {
             
             <button 
               type="submit" 
-              className="btn btn-primary w-100"
+              className="login-button"
               disabled={loading || !formData.login || !formData.password}
             >
               {loading ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-2" />
+                  <span className="spinner" />
                   Вход...
                 </>
               ) : (
                 'Войти'
               )}
             </button>
+            
+            <div className="register-link">
+              Нет аккаунта? <Link to={ROUTES.REGISTER}>Зарегистрироваться</Link>
+            </div>
           </form>
         </div>
       </div>

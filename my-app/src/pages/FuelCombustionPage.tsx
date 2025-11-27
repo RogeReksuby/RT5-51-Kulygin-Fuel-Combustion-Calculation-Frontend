@@ -24,6 +24,7 @@ interface ApplicationFuel {
   is_gas?: boolean;
   volume?: number;
   fuel_volume?: number;
+  calculation_result?: number;
 }
 
 interface ApplicationData {
@@ -55,9 +56,13 @@ const ApplicationPage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Загрузка данных заявки с реального API
+  
+
   useEffect(() => {
+  // Даем время на проверку авторизации
+  const checkAuthAndLoad = setTimeout(() => {
     if (!isAuthenticated) {
+      console.log('🚫 Пользователь не авторизован, редирект на логин');
       navigate(ROUTES.LOGIN);
       return;
     }
@@ -69,7 +74,25 @@ const ApplicationPage: FC = () => {
     }
 
     loadApplicationData(Number(id));
-  }, [id, isAuthenticated, navigate]);
+  }, 1000); // Небольшая задержка
+
+  return () => clearTimeout(checkAuthAndLoad);
+}, [id, isAuthenticated, navigate]);
+ 
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate(ROUTES.LOGIN);
+  //     return;
+  //   }
+
+  //   if (!id) {
+  //     setError('ID заявки не указан');
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   loadApplicationData(Number(id));
+  // }, [id, isAuthenticated, navigate]);
 
   const loadApplicationData = async (applicationId: number) => {
     try {
@@ -213,15 +236,21 @@ const ApplicationPage: FC = () => {
 
   // Функция для отображения результата расчета
   const displayEnergyResult = (fuel: ApplicationFuel): string => {
+    // Если заявка завершена и есть результат расчета для этого топлива
+    if (isCompleted && fuel.calculation_result && fuel.calculation_result > 0) {
+      return `${fuel.calculation_result.toFixed(2)} кДж`;
+    }
     // В черновике и на расчете показываем прочерк
-    // Результат будет только после расчета на бэкенде
     return "—";
   };
 
   // Функция для отображения суммарной энергии
   const displayTotalEnergy = (): string => {
+    // Если заявка завершена и есть финальный результат
+    if (isCompleted && application?.FinalResult && application.FinalResult > 0) {
+      return application.FinalResult.toFixed(2);
+    }
     // В черновике и на расчете показываем прочерк
-    // Результат будет только после расчета на бэкенде
     return "—";
   };
 

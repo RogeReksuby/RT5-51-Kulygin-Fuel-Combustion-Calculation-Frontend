@@ -79,7 +79,7 @@ export const Header: FC = () => {
                             {/* ПРОФИЛЬ И ВЫХОД */}
                             <div className="user-dropdown">
                                 <button className="bButton user-button">
-                                    👋 {user?.name || user?.login || 'Профиль'}
+                                    {user?.name || user?.login || 'Профиль'}
                                 </button>
                                 <div className="dropdown-menu">
                                     <button 
