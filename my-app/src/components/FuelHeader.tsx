@@ -1,5 +1,10 @@
 import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../store';
+import { logoutUser } from '../store/slices/userSlice';
+import { clearCart } from '../store/slices/applicationsSlice';
+import { resetFilters } from '../store/slices/filtersSlice';
 import { ROUTES } from '../../Routes';
 import './FuelHeader.css';
 import photo from '../assets/photo.png'
@@ -15,7 +20,28 @@ export const Header: FC<HeaderProps> = ({
   subtitle = "Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у."
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Получаем данные из Redux store
+  const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { cart } = useSelector((state: RootState) => state.applications);
+
+  // Обработчик выхода из системы
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    dispatch(clearCart()); // Очищаем корзину
+    dispatch(resetFilters()); // Сбрасываем фильтры
+    setIsMenuOpen(false); // Закрываем меню
+  };
+
+  // Обработчик перехода в корзину
+  const handleCartClick = () => {
+    if (cart.app_id) {
+      navigate(`${ROUTES.APPLICATIONS}/${cart.app_id}`);
+    }
+    setIsMenuOpen(false);
+  };
 
   return (
     <header>
@@ -39,6 +65,61 @@ export const Header: FC<HeaderProps> = ({
               <button className="bButton" onClick={() => navigate(ROUTES.FUELS)}>
                 Топливо
               </button>
+              
+              {/* КНОПКИ ДЛЯ АВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ */}
+              {isAuthenticated ? (
+                <>
+                  {/* КОРЗИНА */}
+                  {cart.app_id && (
+                    <button 
+                      className="bButton cart-button"
+                      onClick={handleCartClick}
+                    >
+                      🛒 Корзина 
+                      {cart.count && cart.count > 0 && (
+                        <span className="cart-badge">{cart.count}</span>
+                      )}
+                    </button>
+                  )}
+                  
+                  {/* МОИ ЗАЯВКИ */}
+                  <button 
+                    className="bButton" 
+                    onClick={() => navigate(ROUTES.APPLICATIONS)}
+                  >
+                    Мои заявки
+                  </button>
+                  
+                  {/* ПРОФИЛЬ И ВЫХОД */}
+                  <div className="user-dropdown">
+                    <button className="bButton user-button">
+                      👋 {user?.name || user?.login || 'Профиль'}
+                    </button>
+                    <div className="dropdown-menu">
+                      <button 
+                        className="dropdown-item"
+                        onClick={() => navigate(ROUTES.PROFILE)}
+                      >
+                        Личный кабинет
+                      </button>
+                      <button 
+                        className="dropdown-item logout-button"
+                        onClick={handleLogout}
+                      >
+                        Выйти
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* КНОПКА ВХОДА ДЛЯ НЕАВТОРИЗОВАННЫХ */
+                <button 
+                  className="bButton login-button"
+                  onClick={() => navigate(ROUTES.LOGIN)}
+                >
+                  Войти
+                </button>
+              )}
             </div>
             
             {/* ТОЛЬКО МОБИЛЬНЫЙ БУРГЕР */}
@@ -72,6 +153,54 @@ export const Header: FC<HeaderProps> = ({
                   >
                     Топливо
                   </button>
+                  
+                  {/* МОБИЛЬНЫЕ КНОПКИ АВТОРИЗАЦИИ */}
+                  {isAuthenticated ? (
+                    <>
+                      {cart.app_id && (
+                        <button 
+                          className="dropdown-item"
+                          onClick={handleCartClick}
+                        >
+                          🛒 Корзина ({cart.count || 0})
+                        </button>
+                      )}
+                      <button 
+                        className="dropdown-item"
+                        onClick={() => {
+                          navigate(ROUTES.APPLICATIONS);
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        Мои заявки
+                      </button>
+                      <button 
+                        className="dropdown-item"
+                        onClick={() => {
+                          navigate(ROUTES.PROFILE);
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        Профиль
+                      </button>
+                      <button 
+                        className="dropdown-item logout-button"
+                        onClick={handleLogout}
+                      >
+                        Выйти
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      className="dropdown-item login-button"
+                      onClick={() => {
+                        navigate(ROUTES.LOGIN);
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      Войти
+                    </button>
+                  )}
                 </div>
               )}
             </div>

@@ -18,12 +18,24 @@
 
 //const target_tauri = false; // Для GitHub Pages
 
-export const transformImageUrl = (originalUrl: string) => {
-  return originalUrl.replace('http://127.0.0.1:9000', IMAGE_BASE_URL);
-};
-
-export const API_BASE_URL = 'https://52a775198ecc6c.lhr.life/api'; // Прямой URL к твоему бекенду
-
-export const IMAGE_BASE_URL = 'https://52a775198ecc6c.lhr.life/minio';
-
+export const BASE_URL = 'https://9e3b7f0f5633d6.lhr.life'
+export const API_BASE_URL = BASE_URL; // Прямой URL к твоему бекенду
+export const IMAGE_BASE_URL = BASE_URL + '/minio';
 export const BASE_PATH = '/web_rip_front';
+
+export const transformImageUrl = (imagePath: string | null | undefined): string | null => {
+  // Проверяем что imagePath существует и это строка
+  if (!imagePath || typeof imagePath !== 'string') {
+    return null;
+  }
+
+  // Если путь уже полный URL, возвращаем как есть
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+
+  // Если путь начинается с /, убираем его
+  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+
+  return `${IMAGE_BASE_URL}/${cleanPath}`;
+};

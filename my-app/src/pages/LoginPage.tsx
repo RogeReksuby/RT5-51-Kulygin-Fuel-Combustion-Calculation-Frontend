@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
 import { loginUser, clearError } from '../store/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { Header } from '../components/FuelDetailsHeader'
 
 const LoginPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -67,6 +68,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="container mt-5">
+        <Header/>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h2 className="text-center mb-4">Вход в систему</h2>

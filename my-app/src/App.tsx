@@ -5,12 +5,15 @@ import { FuelDetailPage } from "./pages/FuelDetailPage";
 import LoginPage from "./pages/LoginPage";
 import { ROUTES } from "../Routes";
 import { BASE_PATH } from "./target_config";
+import AppInitializer from "./components/AppInitializer";
 import "./App.css";
+
 
 
 function App() {
   return (
     <BrowserRouter basename={BASE_PATH}>
+      <AppInitializer />
       <Routes>
         <Route path={ROUTES.HOME} element={<HomePage />} />
         <Route path={ROUTES.FUELS} element={<FuelsPage />} />

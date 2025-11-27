@@ -51,7 +51,7 @@ const FuelsPage: FC = () => {
 
   const loadCartCount = async () => {
     try {
-      const count = await getCombustionCartCount();
+      const count = (await getCombustionCartCount()).count || 0;
       setCartCount(count);
     } catch (error) {
       console.error('Error loading cart count:', error);

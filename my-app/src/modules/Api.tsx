@@ -1,121 +1,61 @@
-// src/modules/Api.tsx
-import { type Fuel, type FuelFilter } from './types';
-import { FUELS_MOCK } from './mockData';
-import { API_BASE_URL } from '../target_config';
+import { api } from '../api';
+import type { Fuel } from './types';
 
-// Проверяем, работаем ли мы в Tauri
-const isTauri = typeof window !== 'undefined' && window.__TAURI__ !== undefined;
+interface FuelsResponse {
+  data: Fuel[];
+  count: number;
+}
 
-export const getFuels = async (filters?: FuelFilter): Promise<Fuel[]> => {
+interface FuelResponse {
+  data: Fuel;
+}
+
+interface CartResponse {
+  id_combustion: number;
+  items_count: number;
+}
+
+export const getFuels = async (params: { searchQuery?: string }): Promise<Fuel[]> => {
   try {
-    const queryParams = new URLSearchParams();
-    if (filters?.searchQuery) queryParams.append('title', filters.searchQuery);
-
-    let response: Response;
-
-    if (isTauri) {
-      // Для Tauri используем плагин HTTP
-      const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
-      response = await tauriFetch(`${API_BASE_URL}/fuels?${queryParams}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } else {
-      // Для веба используем стандартный fetch
-      response = await fetch(`${API_BASE_URL}/fuels?${queryParams}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const result = await response.json();
-
-    if (result && Array.isArray(result.data)) {
-      return result.data;
-    } else {
-      console.warn('Unexpected API response format, using mock data');
-      return filterMockFuels(FUELS_MOCK, filters);
-    }
+    const response = await api.api.fuelsList({ title: params.searchQuery });
+    
+    // Бэкенд возвращает { data: Fuel[], count: number }
+    const fuelsResponse = response.data as FuelsResponse;
+    
+    return fuelsResponse.data || [];
   } catch (error) {
-    console.warn('Using mock data due to API error:', error);
-    return filterMockFuels(FUELS_MOCK, filters);
+    console.error('Ошибка загрузки топлива:', error);
+    return [];
   }
 };
 
-export const getFuelById = async (id: number): Promise<Fuel> => {
+export const getFuelById = async (id: number): Promise<Fuel | null> => {
   try {
-    let response: Response;
-
-    if (isTauri) {
-      const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
-      response = await tauriFetch(`${API_BASE_URL}/fuels/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } else {
-      response = await fetch(`${API_BASE_URL}/fuels/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const result = await response.json();
-    return result.data;
+    const response = await api.api.fuelsDetail(id);
+    
+    // Бэкенд возвращает { data: Fuel }
+    const fuelResponse = response.data as FuelResponse;
+    
+    return fuelResponse.data || null;
   } catch (error) {
-    console.warn('Using mock data due to API error:', error);
-    return FUELS_MOCK.find(fuel => fuel.id === id) || FUELS_MOCK[0];
+    console.error('Ошибка загрузки топлива:', error);
+    return null;
   }
 };
 
-export const getCombustionCartCount = async (): Promise<number> => {
+export const getCombustionCartCount = async (): Promise<{count?: number, app_id?: number}> => {
   try {
-    let response: Response;
-
-    if (isTauri) {
-      const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
-      response = await tauriFetch(`${API_BASE_URL}/combustions/cart-icon`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } else {
-      response = await fetch(`${API_BASE_URL}/combustions/cart-icon`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    return data.count || 0;
+    const response = await api.api.combustionsCartIconList();
+    
+    // Бэкенд возвращает { id_combustion: number, items_count: number }
+    const cartResponse = response.data as CartResponse;
+    
+    return {
+      app_id: cartResponse.id_combustion,
+      count: cartResponse.items_count
+    };
   } catch (error) {
-    console.warn('Failed to get cart count:', error);
-    return 0;
+    console.error('Ошибка загрузки корзины:', error);
+    return { count: 0, app_id: undefined };
   }
-};
-
-const filterMockFuels = (fuels: Fuel[], filters?: FuelFilter): Fuel[] => {
-  let filtered = fuels.filter(fuel => !fuel.is_delete);
-
-  if (filters?.searchQuery) {
-    filtered = filtered.filter(fuel =>
-      fuel.title.toLowerCase().includes(filters.searchQuery!.toLowerCase())
-    );
-  }
-
-  return filtered;
 };

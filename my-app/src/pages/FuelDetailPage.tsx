@@ -8,7 +8,7 @@ import { Footer } from '../components/FuelFooter';
 import { Breadcrumbs } from '../components/BreadCrumbs';
 import './FuelDetailPage.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
-import { IMAGE_BASE_URL, transformImageUrl } from '../target_config';
+import { transformImageUrl } from '../target_config';
 
 export const FuelDetailPage: FC = () => {
   const [fuel, setFuel] = useState<Fuel | null>(null);

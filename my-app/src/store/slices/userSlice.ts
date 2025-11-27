@@ -19,14 +19,14 @@ const initialState: UserState = {
 // Асинхронное действие для логина
 export const loginUser = createAsyncThunk(
   'user/login',
-  async (credentials: HandlerLoginRequest, { rejectWithValue }) => {
+  async (credentials: HandlerLoginRequest, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.api.usersLoginCreate(credentials);
       
       // Сохраняем токен
-       const token = response.data.access_token || null;
+      const token = response.data.access_token || null;
       setAuthToken(token);
-      localStorage.setItem('token', response.data.access_token || '');
+      localStorage.setItem('token', token || '');
       
       return response.data.user || null;
     } catch (error: any) {
@@ -50,6 +50,32 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+// Проверка авторизации при загрузке приложения
+export const checkAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return null;
+      }
+
+      // Устанавливаем токен
+      setAuthToken(token);
+      
+      // Проверяем валидность токена через запрос профиля
+      const response = await api.api.usersProfileList();
+      
+      return response.data;
+    } catch (error: any) {
+      // Если токен невалидный, очищаем его
+      setAuthToken(null);
+      localStorage.removeItem('token');
+      return rejectWithValue('Токен устарел');
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -69,15 +95,39 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        state.isAuthenticated = false;
       })
+      
       // Логаут
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      
+      // Проверка авторизации
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = null;
       });
   },
 });
