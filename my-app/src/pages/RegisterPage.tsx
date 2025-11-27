@@ -7,7 +7,7 @@ import { Header } from '../components/FuelDetailsHeader';
 import { ROUTES } from '../../Routes';
 import { api } from '../api';
 import './RegisterPage.css';
-import { Breadcrumb } from 'react-bootstrap';
+//import { Breadcrumb } from 'react-bootstrap';
 import { Breadcrumbs } from '../components/BreadCrumbs';
 
 const RegisterPage: React.FC = () => {

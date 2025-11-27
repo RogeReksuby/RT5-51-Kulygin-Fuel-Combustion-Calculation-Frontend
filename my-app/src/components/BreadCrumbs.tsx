@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation/*, useParams*/ } from 'react-router-dom';
 import { ROUTES, ROUTE_LABELS } from '../../Routes';
 import './BreadCrumbs.css';
 
@@ -10,7 +10,7 @@ interface Crumb {
 
 export const Breadcrumbs: FC = () => {
   const location = useLocation();
-  const params = useParams();
+  //const params = useParams();
   
   // Функция для генерации хлебных крошек на основе текущего пути
   const generateBreadcrumbs = (): Crumb[] => {

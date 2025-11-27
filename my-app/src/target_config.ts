@@ -29,13 +29,8 @@ export const transformImageUrl = (imagePath: string | null | undefined): string 
     return null;
   }
 
-  // Если путь уже полный URL, возвращаем как есть
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath;
-  }
+return imagePath.replace('http://127.0.0.1:9000', IMAGE_BASE_URL);
 
-  // Если путь начинается с /, убираем его
-  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
 
-  return `${IMAGE_BASE_URL}/${cleanPath}`;
+
 };
