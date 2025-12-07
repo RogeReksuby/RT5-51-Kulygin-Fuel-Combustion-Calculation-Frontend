@@ -1,4 +1,4 @@
-import { type FC, useState, useEffect } from 'react';
+import { type FC, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { api } from '../api';
@@ -13,18 +13,15 @@ import { Breadcrumbs } from '../components/BreadCrumbs';
 // Используем тип из сгенерированного API
 interface Application extends DsCombustionResponse {}
 
-// Самая простая версия - проверяем только формат
+// Функция форматирования даты
 const formatDateForBackend = (dateString: string): string => {
   if (!dateString) return '';
   
-  // Проверяем формат ДД.ММ.ГГГГ
   const regex = /^\d{2}\.\d{2}\.\d{4}$/;
   if (regex.test(dateString)) {
-    return dateString; // Уже в правильном формате
+    return dateString;
   }
   
-  // Если ввели что-то другое, возвращаем пустую строку
-  console.warn('Некорректный формат даты. Используйте ДД.ММ.ГГГГ');
   return '';
 };
 
@@ -40,42 +37,20 @@ const ApplicationsPage: FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
 
-  useEffect(() => {
-    const checkAuthAndLoad = setTimeout(() => {
-      if (!isAuthenticated) {
-        navigate(ROUTES.LOGIN);
-        return;
-      }
-
-      loadApplications();
-    }, 1000);
-
-    return () => clearTimeout(checkAuthAndLoad);
-  }, [isAuthenticated, navigate]);
-
-  const loadApplications = async () => {
+  // Функция для загрузки заявок
+  const loadApplications = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
-      
       const queryParams: any = {};
 
       if (statusFilter) {
         queryParams.status = statusFilter;
       }
       
-      // Проверяем и форматируем дату
       if (selectedDate) {
         const formattedDate = formatDateForBackend(selectedDate);
         if (formattedDate) {
           queryParams.start_date = formattedDate;
           queryParams.end_date = formattedDate;
-          console.log('Фильтруем по дате:', formattedDate);
-        } else {
-          // Если дата в неправильном формате, показываем ошибку
-          setError('Введите дату в формате ДД.ММ.ГГГГ (например: 28.11.2025)');
-          setLoading(false);
-          return;
         }
       }
 
@@ -86,18 +61,37 @@ const ApplicationsPage: FC = () => {
       const applicationsArray = responseData[dataKey] || [];
       
       setApplications(applicationsArray);
+      setError(null);
       
-      console.log('Заявки загружены:', applicationsArray.length);
     } catch (error: any) {
       console.error('Ошибка загрузки заявок:', error);
       setError('Не удалось загрузить список заявок');
-      setApplications([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, selectedDate]);
+
+  // Первоначальная загрузка и short polling
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(ROUTES.LOGIN);
+      return;
+    }
+
+    // Первоначальная загрузка
+    loadApplications();
+
+    // Настраиваем интервал опроса каждую секунду
+    const intervalId = setInterval(loadApplications, 1000);
+
+    // Очистка интервала при размонтировании
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isAuthenticated, navigate, loadApplications]);
 
   const handleApplyFilters = () => {
+    // Просто перезапускаем загрузку с текущими фильтрами
     loadApplications();
   };
 
@@ -134,7 +128,6 @@ const ApplicationsPage: FC = () => {
   // Обработчик изменения даты с подсказкой
   const handleDateChange = (value: string) => {
     setSelectedDate(value);
-    // Очищаем ошибку если пользователь начал вводить заново
     if (error && error.includes('дату в формате')) {
       setError(null);
     }
