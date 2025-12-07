@@ -76,26 +76,20 @@ export const Header: FC = () => {
                                 Мои заявки
                             </button>
                             
-                            {/* ПРОФИЛЬ И ВЫХОД */}
-                            <div className="user-dropdown">
-                                <button className="bButton user-button">
-                                    {user?.name || user?.login || 'Профиль'}
-                                </button>
-                                <div className="dropdown-menu">
-                                    <button 
-                                        className="dropdown-item"
-                                        onClick={() => navigate(ROUTES.PROFILE)}
-                                    >
-                                        Личный кабинет
-                                    </button>
-                                    <button 
-                                        className="dropdown-item logout-button"
-                                        onClick={handleLogout}
-                                    >
-                                        Выйти
-                                    </button>
-                                </div>
-                            </div>
+                            <button 
+                                className="bButton"
+                                onClick={() => navigate(ROUTES.PROFILE)}
+                            >
+                                Личный кабинет
+                            </button>
+                            <button 
+                                className="bButton login-button"
+                                onClick={handleLogout}
+                            >
+                                Выйти
+                            </button>
+
+                            
                         </>
                     ) : (
                         /* КНОПКА ВХОДА ДЛЯ НЕАВТОРИЗОВАННЫХ */

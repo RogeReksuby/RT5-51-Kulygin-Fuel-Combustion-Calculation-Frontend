@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { /*useDispatch, */useSelector } from 'react-redux';
-import type { /*AppDispatch,*/ RootState } from '../store';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store';
 import { api } from '../api';
 import { Header } from '../components/FuelDetailsHeader';
 import { Footer } from '../components/FuelFooter';
@@ -10,7 +10,6 @@ import { transformImageUrl } from '../target_config';
 import DefaultImage from '../assets/DefaultImage.jpg';
 import './FuelCombustionPage.css';
 import { Breadcrumbs } from '../components/BreadCrumbs';
-
 
 // Типы данных от API
 interface ApplicationFuel {
@@ -48,71 +47,59 @@ interface ApiResponse {
 const ApplicationPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  //const dispatch = useDispatch<AppDispatch>();
   
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   
   const [application, setApplication] = useState<ApplicationData | null>(null);
-  const [molarVolume, setMolarVolume] = useState<string>('22.4');
+  const [molarVolumeInput, setMolarVolumeInput] = useState<string>('22.4');
+  const [fuelVolumeInputs, setFuelVolumeInputs] = useState<{[key: number]: string}>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  
+  const [savingMolarVolume, setSavingMolarVolume] = useState(false);
 
   useEffect(() => {
-  // Даем время на проверку авторизации
-  const checkAuthAndLoad = setTimeout(() => {
-    if (!isAuthenticated) {
-      navigate(ROUTES.LOGIN);
-      return;
-    }
+    const checkAuthAndLoad = setTimeout(() => {
+      if (!isAuthenticated) {
+        navigate(ROUTES.LOGIN);
+        return;
+      }
 
-    if (!id) {
-      setError('ID заявки не указан');
-      setLoading(false);
-      return;
-    }
+      if (!id) {
+        setError('ID заявки не указан');
+        setLoading(false);
+        return;
+      }
 
-    loadApplicationData(Number(id));
-  }, 1000); // Небольшая задержка
+      loadApplicationData(Number(id));
+    }, 1000);
 
-  return () => clearTimeout(checkAuthAndLoad);
-}, [id, isAuthenticated, navigate]);
- 
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     navigate(ROUTES.LOGIN);
-  //     return;
-  //   }
-
-  //   if (!id) {
-  //     setError('ID заявки не указан');
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   loadApplicationData(Number(id));
-  // }, [id, isAuthenticated, navigate]);
+    return () => clearTimeout(checkAuthAndLoad);
+  }, [id, isAuthenticated, navigate]);
 
   const loadApplicationData = async (applicationId: number) => {
     try {
       setLoading(true);
       setError(null);
       
-      
       const response = await api.api.combustionsDetail(applicationId);
-      
       const apiResponse = response.data as ApiResponse;
       const appData = apiResponse.data;
       
-      
       setApplication(appData);
       
+      // Инициализируем молярный объем
       if (appData.MolarVolume) {
-        setMolarVolume(appData.MolarVolume.toString());
+        setMolarVolumeInput(appData.MolarVolume.toString());
       } else {
-        setMolarVolume('22.4');
+        setMolarVolumeInput('22.4');
       }
+      
+      // Инициализируем объемы топлива
+      const initialVolumes: {[key: number]: string} = {};
+      appData.Fuels?.forEach(fuel => {
+        initialVolumes[fuel.id] = (fuel.fuel_volume || fuel.volume || 0).toString();
+      });
+      setFuelVolumeInputs(initialVolumes);
       
     } catch (error: any) {
       console.error('Ошибка загрузки заявки:', error);
@@ -123,19 +110,62 @@ const ApplicationPage: FC = () => {
     }
   };
 
-  // Обработчик изменения объема топлива
-  const handleVolumeChange = async (fuelId: number, newVolume: string) => {
+  // Обработчик изменения молярного объема (только меняем локальное состояние)
+  const handleMolarVolumeChange = (value: string) => {
+    setMolarVolumeInput(value);
+  };
+
+  // Сохранение молярного объема
+  const handleSaveMolarVolume = async () => {
     if (!application || !id) return;
     
-    const volumeValue = parseFloat(newVolume) || 0; // 0 по умолчанию
+    const molarValue = parseFloat(molarVolumeInput) || 22.4;
     
     try {
+      setSavingMolarVolume(true);
+      
+      await api.api.combustionsUpdate(Number(id), { molar_volume: molarValue });
+      
+      // Обновляем данные в приложении
+      setApplication({
+        ...application,
+        MolarVolume: molarValue
+      });
+      
+      alert('Молярный объем сохранен!');
+    } catch (error: any) {
+      console.error('Ошибка сохранения молярного объема:', error);
+      alert('Не удалось сохранить молярный объем');
+    } finally {
+      setSavingMolarVolume(false);
+    }
+  };
+
+  // Обработчик изменения объема топлива (только меняем локальное состояние)
+  const handleFuelVolumeChange = (fuelId: number, newVolume: string) => {
+    setFuelVolumeInputs(prev => ({
+      ...prev,
+      [fuelId]: newVolume
+    }));
+  };
+
+  // Сохранение объема одного вида топлива
+  const handleSaveFuelVolume = async (fuelId: number) => {
+    if (!application || !id) return;
+    
+    const volumeValue = parseFloat(fuelVolumeInputs[fuelId]) || 0;
+    
+    try {
+      // Обновляем UI - показываем что идет сохранение
+      const savingFuels = { ...fuelVolumeInputs };
+      // Здесь можно добавить индикатор загрузки если нужно
       
       await api.api.fuelCombustionsUpdate({
         fuel_id: fuelId,
         fuel_volume: volumeValue
       });
       
+      // Обновляем данные в приложении
       const updatedFuels = application.Fuels?.map(fuel =>
         fuel.id === fuelId 
           ? { ...fuel, fuel_volume: volumeValue }
@@ -144,29 +174,10 @@ const ApplicationPage: FC = () => {
       
       setApplication({ ...application, Fuels: updatedFuels });
       
-      console.log('Объем топлива обновлен');
+      alert('Объем топлива сохранен!');
     } catch (error: any) {
-      console.error('Ошибка обновления объема:', error);
-      alert('Не удалось обновить объем топлива');
-    }
-  };
-
-  // Обработчик изменения молярного объема
-  const handleMolarVolumeChange = async (value: string) => {
-    if (!application || !id) return;
-    
-    const molarValue = parseFloat(value) || 22.4;
-    setMolarVolume(value);
-    
-    try {
-      console.log('📝 Обновляем молярный объем:', molarValue);
-      
-      await api.api.combustionsUpdate(Number(id), { molar_volume: molarValue });
-      
-      console.log('Молярный объем обновлен');
-    } catch (error: any) {
-      console.error('Ошибка обновления молярного объема:', error);
-      alert('Не удалось обновить молярный объем');
+      console.error('Ошибка сохранения объема топлива:', error);
+      alert('Не удалось сохранить объем топлива');
     }
   };
 
@@ -176,11 +187,7 @@ const ApplicationPage: FC = () => {
     
     if (window.confirm('Вы уверены, что хотите удалить эту заявку?')) {
       try {
-        console.log('🗑️ Удаляем заявку:', id);
-        
         await api.api.combustionsDelete();
-        
-        console.log('Заявка удалена');
         navigate(ROUTES.FUELS);
       } catch (error: any) {
         console.error('Ошибка удаления заявки:', error);
@@ -194,14 +201,8 @@ const ApplicationPage: FC = () => {
     if (!id || !application) return;
     
     try {
-
-      
       await api.api.combustionsFormUpdate(Number(id));
-      
-      console.log('Заявка отправлена на расчет');
-      
       await loadApplicationData(Number(id));
-      
       alert('Заявка успешно отправлена на расчет!');
     } catch (error: any) {
       console.error('Ошибка отправки заявки:', error);
@@ -215,14 +216,14 @@ const ApplicationPage: FC = () => {
     
     if (window.confirm('Удалить это топливо из заявки?')) {
       try {
-
-        
         await api.api.fuelCombustionsDelete({ fuel_id: fuelId });
         
         const updatedFuels = application.Fuels?.filter(fuel => fuel.id !== fuelId) || [];
         setApplication({ ...application, Fuels: updatedFuels });
         
-        console.log('Топливо удалено из заявки');
+        // Удаляем из локальных состояний
+        const { [fuelId]: removed, ...rest } = fuelVolumeInputs;
+        setFuelVolumeInputs(rest);
       } catch (error: any) {
         console.error('Ошибка удаления топлива:', error);
         alert('Не удалось удалить топливо из заявки');
@@ -232,21 +233,19 @@ const ApplicationPage: FC = () => {
 
   // Функция для отображения результата расчета
   const displayEnergyResult = (fuel: ApplicationFuel): string => {
-    // Если заявка завершена и есть результат расчета для этого топлива
+    const isCompleted = application?.Status === 'approved' || application?.Status === 'завершён';
     if (isCompleted && fuel.calculation_result && fuel.calculation_result > 0) {
       return `${fuel.calculation_result.toFixed(2)} кДж`;
     }
-    // В черновике и на расчете показываем прочерк
     return "—";
   };
 
   // Функция для отображения суммарной энергии
   const displayTotalEnergy = (): string => {
-    // Если заявка завершена и есть финальный результат
+    const isCompleted = application?.Status === 'approved' || application?.Status === 'завершён';
     if (isCompleted && application?.FinalResult && application.FinalResult > 0) {
       return application.FinalResult.toFixed(2);
     }
-    // В черновике и на расчете показываем прочерк
     return "—";
   };
 
@@ -266,7 +265,6 @@ const ApplicationPage: FC = () => {
   };
 
   const isDraft = application?.Status === 'draft' || application?.Status === 'черновик';
-  const isCompleted = application?.Status === 'approved' || application?.Status === 'завершён';
 
   if (loading) {
     return (
@@ -334,7 +332,8 @@ const ApplicationPage: FC = () => {
         ) : (
           <div className="application-status">
             Статус: {getStatusText(application.Status)}
-            {isCompleted && application.FinalResult && application.FinalResult > 0 && (
+            {(application.Status === 'approved' || application.Status === 'завершён') && 
+             application.FinalResult && application.FinalResult > 0 && (
               <span style={{marginLeft: '20px'}}>
                 Результат: {application.FinalResult} кДж
               </span>
@@ -343,18 +342,26 @@ const ApplicationPage: FC = () => {
         )}
       </div>
 
-      {/* Молярный объем */}
+      {/* Молярный объем с кнопкой сохранить */}
       {isDraft && (
-        <div className="resFrameReq">
+        <div className="resFrameReq" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           Молярный объем (22.4 для н.у.):
           <input 
             className="volumeSpaceReq" 
             type="number"
             step="0.1"
-            value={molarVolume}
+            value={molarVolumeInput}
             onChange={(e) => handleMolarVolumeChange(e.target.value)}
             placeholder="22.4"
           />
+          <button 
+            className="bButton"
+            onClick={handleSaveMolarVolume}
+            disabled={savingMolarVolume}
+            
+          >
+            {savingMolarVolume ? 'Сохранение...' : 'Сохранить'}
+          </button>
         </div>
       )}
 
@@ -393,15 +400,26 @@ const ApplicationPage: FC = () => {
                   </div>
                 </td>
                 <td className="volume-cell">
-                  <input 
-                    className="volumeSpaceReq" 
-                    type="number"
-                    step="0.1"
-                    value={fuel.fuel_volume || fuel.volume || 0} //{/* 0 по умолчанию */}
-                    onChange={(e) => handleVolumeChange(fuel.id, e.target.value)}
-                    placeholder="0"
-                    disabled={!isDraft}
-                  />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input 
+                      className="volumeSpaceReq" 
+                      type="number"
+                      step="0.1"
+                      value={fuelVolumeInputs[fuel.id] || (fuel.fuel_volume || fuel.volume || 0).toString()}
+                      onChange={(e) => handleFuelVolumeChange(fuel.id, e.target.value)}
+                      placeholder="0"
+                      disabled={!isDraft}
+                    />
+                    {isDraft && (
+                      <button 
+                        className="bButton"
+                        onClick={() => handleSaveFuelVolume(fuel.id)}
+                        
+                      >
+                        Сохранить
+                      </button>
+                    )}
+                  </div>
                 </td>
                 <td className="result-cell">
                   <div className="resCardReq">

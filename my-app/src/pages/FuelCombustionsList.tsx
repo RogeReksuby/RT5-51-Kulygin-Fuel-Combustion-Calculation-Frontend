@@ -2,7 +2,7 @@ import { type FC, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { api } from '../api';
-import type { DsCombustionResponse } from '../api/Api'; // ← ИМПОРТИРУЕМ ТИП ИЗ СГЕНЕРИРОВАННОГО API
+import type { DsCombustionResponse } from '../api/Api';
 import { Header } from '../components/FuelDetailsHeader';
 import { Footer } from '../components/FuelFooter';
 import { ROUTES } from '../../Routes';
@@ -11,9 +11,22 @@ import './FuelCombustionsList.css';
 import { Breadcrumbs } from '../components/BreadCrumbs';
 
 // Используем тип из сгенерированного API
-interface Application extends DsCombustionResponse {
-  // Дополнительные поля если нужны
-}
+interface Application extends DsCombustionResponse {}
+
+// Самая простая версия - проверяем только формат
+const formatDateForBackend = (dateString: string): string => {
+  if (!dateString) return '';
+  
+  // Проверяем формат ДД.ММ.ГГГГ
+  const regex = /^\d{2}\.\d{2}\.\d{4}$/;
+  if (regex.test(dateString)) {
+    return dateString; // Уже в правильном формате
+  }
+  
+  // Если ввели что-то другое, возвращаем пустую строку
+  console.warn('Некорректный формат даты. Используйте ДД.ММ.ГГГГ');
+  return '';
+};
 
 const ApplicationsPage: FC = () => {
   const navigate = useNavigate();
@@ -25,61 +38,50 @@ const ApplicationsPage: FC = () => {
   
   // Фильтры
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
 
-    useEffect(() => {
-    // Даем время на проверку авторизации
+  useEffect(() => {
     const checkAuthAndLoad = setTimeout(() => {
-        if (!isAuthenticated) {
+      if (!isAuthenticated) {
         navigate(ROUTES.LOGIN);
         return;
-        }
+      }
 
-        loadApplications();
-    }, 1000); // Небольшая задержка
+      loadApplications();
+    }, 1000);
 
     return () => clearTimeout(checkAuthAndLoad);
-    }, [isAuthenticated, navigate]);
-
-
-//   useEffect(() => {
-//     if (!isAuthenticated) {
-//       navigate(ROUTES.LOGIN);
-//       return;
-//     }
-
-//     loadApplications();
-//   }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const loadApplications = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Создаем объект параметров
       const queryParams: any = {};
 
       if (statusFilter) {
         queryParams.status = statusFilter;
       }
-      if (startDate) {
-        queryParams.start_date = startDate;
-      }
-      if (endDate) {
-        queryParams.end_date = endDate;
+      
+      // Проверяем и форматируем дату
+      if (selectedDate) {
+        const formattedDate = formatDateForBackend(selectedDate);
+        if (formattedDate) {
+          queryParams.start_date = formattedDate;
+          queryParams.end_date = formattedDate;
+          console.log('Фильтруем по дате:', formattedDate);
+        } else {
+          // Если дата в неправильном формате, показываем ошибку
+          setError('Введите дату в формате ДД.ММ.ГГГГ (например: 28.11.2025)');
+          setLoading(false);
+          return;
+        }
       }
 
-
-      // РЕАЛЬНЫЙ API ВЫЗОВ
       const response = await api.api.combustionsList(queryParams);
-
       
-      // API возвращает Record<string, DsCombustionResponse[]>
-      // Нужно извлечь массив заявок
       const responseData = response.data as Record<string, DsCombustionResponse[]>;
-      
-      // Извлекаем первый ключ (обычно это "data" или что-то подобное)
       const dataKey = Object.keys(responseData)[0];
       const applicationsArray = responseData[dataKey] || [];
       
@@ -95,25 +97,14 @@ const ApplicationsPage: FC = () => {
     }
   };
 
-  // Обработчик применения фильтров
   const handleApplyFilters = () => {
     loadApplications();
   };
 
-  // Обработчик сброса фильтров
-  const handleResetFilters = () => {
-    setStatusFilter('');
-    setStartDate('');
-    setEndDate('');
-    loadApplications();
-  };
-
-  // Переход к деталям заявки
   const handleViewApplication = (applicationId: number) => {
     navigate(`${ROUTES.APPLICATIONS}/${applicationId}`);
   };
 
-  // Получение текста статуса
   const getStatusText = (status?: string): string => {
     const statusMap: { [key: string]: string } = {
       'draft': 'Черновик',
@@ -129,7 +120,6 @@ const ApplicationsPage: FC = () => {
     return statusMap[status || ''] || status || 'Неизвестно';
   };
 
-  // Получение класса для статуса
   const getStatusClass = (status?: string): string => {
     const statusClassMap: { [key: string]: string } = {
       'черновик': 'status-draft',
@@ -139,6 +129,15 @@ const ApplicationsPage: FC = () => {
       'удалён': 'status-deleted'
     };
     return statusClassMap[status || ''] || 'status-unknown';
+  };
+
+  // Обработчик изменения даты с подсказкой
+  const handleDateChange = (value: string) => {
+    setSelectedDate(value);
+    // Очищаем ошибку если пользователь начал вводить заново
+    if (error && error.includes('дату в формате')) {
+      setError(null);
+    }
   };
 
   if (!isAuthenticated) {
@@ -170,30 +169,43 @@ const ApplicationsPage: FC = () => {
             </select>
           </div>
 
-          
+          <div className="filter-group">
+            <label htmlFor="dateFilter">Дата:</label>
+            <input 
+              type="text"
+              id="dateFilter"
+              value={selectedDate}
+              onChange={(e) => handleDateChange(e.target.value)}
+              className="filter-input"
+              placeholder="дд.мм.гггг"
+              maxLength={10}
+            />
+            <small className="date-hint">Формат: ДД.ММ.ГГГГ (пример: 28.11.2025)</small>
+          </div>
 
           <div className="filter-actions">
             <button 
               onClick={handleApplyFilters}
               className="filter-button apply"
             >
-              Применить
-            </button>
-            <button 
-              onClick={handleResetFilters}
-              className="filter-button reset"
-            >
-              Сбросить
+              Применить фильтры
             </button>
           </div>
         </div>
 
-        {/* Состояние загрузки/ошибки */}
+        {/* Сообщения об ошибках валидации */}
+        {error && error.includes('дату в формате') && (
+          <div className="validation-error">
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* Состояние загрузки/ошибки API */}
         {loading && (
           <div className="loading-message">Загрузка заявок...</div>
         )}
 
-        {error && (
+        {error && !error.includes('дату в формате') && (
           <div className="error-message">
             {error}
             <button onClick={loadApplications} className="retry-button">
@@ -202,57 +214,69 @@ const ApplicationsPage: FC = () => {
           </div>
         )}
 
-        {/* Таблица заявок */}
+        {/* Список карточек заявок */}
         {!loading && !error && (
-          <div className="applications-table-container">
+          <div className="applications-list">
             {applications.length > 0 ? (
-              <table className="applications-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Статус</th>
-                    <th>Дата создания</th>
-                    <th>Дата обновления</th>
-                    <th>Молярный объем</th>
-                    <th>Результат (кДж)</th>
-                    <th>Действия</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {applications.map((app) => (
-                    <tr key={app.id} className="application-row">
-                      <td className="application-id">#{app.id}</td>
-                      <td className="application-status">
+              <div className="applications-cards-single-column">
+                {applications.map((app) => (
+                  <div key={app.id} className="application-card-row">
+                    {/* Верхняя часть карточки с ID и статусом */}
+                    <div className="card-row-header">
+                      <div className="card-id">Заявка #{app.id}</div>
+                      <div className="card-status">
                         <span className={`status-badge ${getStatusClass(app.status)}`}>
                           {getStatusText(app.status)}
                         </span>
-                      </td>
-                      <td className="application-date">{app.date_create}</td>
-                      <td className="application-date">{app.date_update}</td>
-                      <td className="application-volume">{app.molar_volume}</td>
-                      <td className="application-result">
-                        {app.final_result && app.final_result > 0 ? app.final_result.toFixed(2) : '—'}
-                      </td>
-                      <td className="application-actions">
+                      </div>
+                    </div>
+                    
+                    {/* Содержимое карточки в одну строку */}
+                    <div className="card-row-content">
+                      <div className="card-column">
+                        <div className="card-label">Дата создания</div>
+                        <div className="card-value">{app.date_create}</div>
+                      </div>
+                      
+                      <div className="card-column">
+                        <div className="card-label">Дата обновления</div>
+                        <div className="card-value">{app.date_update || '—'}</div>
+                      </div>
+                      
+                      <div className="card-column">
+                        <div className="card-label">Молярный объем</div>
+                        <div className="card-value">{app.molar_volume || '—'}</div>
+                      </div>
+                      
+                      <div className="card-column">
+                        <div className="card-label">Результат</div>
+                        <div className="card-value result">
+                          {app.final_result && app.final_result > 0 
+                            ? `${app.final_result.toFixed(2)} кДж`
+                            : '—'
+                          }
+                        </div>
+                      </div>
+                      
+                      <div className="card-column actions-column">
                         <button 
                           onClick={() => handleViewApplication(app.id!)}
                           className="view-button"
                         >
-                          Просмотреть
+                          Открыть
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="no-applications">
                 <p>Заявки не найдены</p>
-                {(statusFilter || startDate || endDate) && (
-                  <button onClick={handleResetFilters} className="clear-filters-button">
-                    Очистить фильтры
-                  </button>
-                )}
+                <button onClick={() => {setStatusFilter(''); setSelectedDate(''); loadApplications();}} 
+                        className="clear-filters-button">
+                  Очистить фильтры
+                </button>
               </div>
             )}
           </div>
