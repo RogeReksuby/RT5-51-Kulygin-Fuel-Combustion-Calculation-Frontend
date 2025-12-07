@@ -18,7 +18,7 @@
 
 //const target_tauri = false; // Для GitHub Pages
 
-export const BASE_URL = 'https://99bbe0bcc80b2f.lhr.life'
+export const BASE_URL = 'https://e2e7b82ca4ac04.lhr.life'
 export const API_BASE_URL = BASE_URL; // Прямой URL к твоему бекенду
 export const IMAGE_BASE_URL = BASE_URL + '/minio';
 export const BASE_PATH = '/web_rip_front';
