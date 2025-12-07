@@ -5,6 +5,7 @@ import type { DsUsers, HandlerLoginRequest } from '../../api/Api';
 interface UserState {
   user: DsUsers | null;
   isAuthenticated: boolean;
+  isModerator: boolean;  // Заменяем role на isModerator
   loading: boolean;
   error: string | null;
 }
@@ -12,6 +13,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   isAuthenticated: false,
+  isModerator: false,  // По умолчанию не модератор
   loading: false,
   error: null,
 };
@@ -35,7 +37,16 @@ export const loginUser = createAsyncThunk(
       
       localStorage.setItem('token', token || '');
       
-      return response.data.user || null;
+      // Возвращаем user и определяем isModerator
+      const userData = response.data.user || null;
+      const isModerator = userData?.is_moderator || userData?.is_moderator || false; // Проверяем разные варианты названия поля
+      
+      console.log('👤 Пользователь isModerator:', isModerator);
+      
+      return {
+        user: userData,
+        isModerator: isModerator
+      };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.description || 'Ошибка авторизации');
     }
@@ -81,7 +92,16 @@ export const checkAuth = createAsyncThunk(
       setAuthToken(token);
       const response = await api.api.usersProfileList();
       
-      return response.data;
+      // Определяем isModerator из ответа
+      const userData = response.data;
+      const isModerator = userData?.is_moderator || userData?.isModerator || false;
+      
+      console.log('✅ Проверка авторизации, isModerator:', isModerator);
+      
+      return {
+        user: userData,
+        isModerator: isModerator
+      };
     } catch (error: any) {
       console.error('checkAuth: ошибка:', error);
       setAuthToken(null);
@@ -107,9 +127,14 @@ const userSlice = createSlice({
     resetAuthState: (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isModerator = false;  // Сбрасываем isModerator
       state.loading = false;
       state.error = null;
       setAuthToken(null);
+    },
+    // Редюсер для обновления isModerator (если нужно вручную)
+    setIsModerator: (state, action) => {
+      state.isModerator = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -121,20 +146,24 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.isModerator = action.payload.isModerator;  // Сохраняем isModerator
         state.isAuthenticated = true;
         state.error = null;
+        console.log('✅ Логин успешен, isModerator:', action.payload.isModerator);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+        state.isModerator = false;  // Сбрасываем isModerator при ошибке
       })
       
       // Логаут
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
+        state.isModerator = false;  // Сбрасываем isModerator
         state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
@@ -147,18 +176,21 @@ const userSlice = createSlice({
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.isModerator = action.payload.isModerator;  // Сохраняем isModerator
         state.isAuthenticated = true;
         state.error = null;
+        console.log('✅ Авторизация проверена, isModerator:', action.payload.isModerator);
       })
       .addCase(checkAuth.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.isModerator = false;  // Сбрасываем isModerator
         state.error = null;
       });
   },
 });
 
-export const { clearError, resetAuthState } = userSlice.actions;
+export const { clearError, resetAuthState, setIsModerator } = userSlice.actions;
 export default userSlice.reducer;
