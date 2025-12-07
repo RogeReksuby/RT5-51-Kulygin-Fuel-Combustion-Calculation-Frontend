@@ -16,6 +16,9 @@ const initialState: UserState = {
   error: null,
 };
 
+// Флаг для определения первой загрузки
+let isFirstLoad = true;
+
 // Асинхронное действие для логина
 export const loginUser = createAsyncThunk(
   'user/login',
@@ -31,10 +34,6 @@ export const loginUser = createAsyncThunk(
       console.log('💾 Сохраняем в localStorage...');
       
       localStorage.setItem('token', token || '');
-      
-      // ПРОВЕРКА: читаем обратно
-      const savedToken = localStorage.getItem('token');
-      console.log('📖 Токен из localStorage:', savedToken);
       
       return response.data.user || null;
     } catch (error: any) {
@@ -61,6 +60,16 @@ export const logoutUser = createAsyncThunk(
 export const checkAuth = createAsyncThunk(
   'user/checkAuth',
   async (_, { rejectWithValue }) => {
+    // Если это первая загрузка - ВСЕГДА возвращаем ошибку
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      console.log('🔄 Первая загрузка приложения - сбрасываем авторизацию');
+      localStorage.removeItem('token'); // Очищаем токен
+      setAuthToken(null); // Сбрасываем токен в axios
+      return rejectWithValue('Требуется вход после перезагрузки');
+    }
+    
+    // Для последующих проверок (при переходе между страницами) работаем как обычно
     try {
       const token = localStorage.getItem('token');
       
@@ -69,14 +78,8 @@ export const checkAuth = createAsyncThunk(
         return rejectWithValue('No token');
       }
 
-      // Устанавливаем токен
       setAuthToken(token);
-
-      
-      // Проверяем валидность токена
-
       const response = await api.api.usersProfileList();
-
       
       return response.data;
     } catch (error: any) {
@@ -88,6 +91,11 @@ export const checkAuth = createAsyncThunk(
   }
 );
 
+// Функция для принудительного сброса флага (на случай если нужно перезагрузить)
+export const resetFirstLoad = () => {
+  isFirstLoad = true;
+};
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -95,6 +103,14 @@ const userSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    // Редюсер для принудительного сброса состояния при перезагрузке
+    resetAuthState: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      state.loading = false;
+      state.error = null;
+      setAuthToken(null);
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -144,5 +160,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { clearError } = userSlice.actions;
+export const { clearError, resetAuthState } = userSlice.actions;
 export default userSlice.reducer;

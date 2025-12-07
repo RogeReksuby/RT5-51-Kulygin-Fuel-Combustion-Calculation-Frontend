@@ -1,255 +1,3 @@
-/* ApplicationsPage.css */
-.applications-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Manrope', sans-serif;
-}
-
-.applications-title {
-  color: #203563;
-  font-size: 36px;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-/* Секция фильтров */
-.filters-section {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: end;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.filter-group label {
-  font-weight: 600;
-  color: #203563;
-  font-size: 14px;
-}
-
-.filter-select,
-.filter-input {
-  padding: 8px 12px;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  min-width: 150px;
-}
-
-.filter-select:focus,
-.filter-input:focus {
-  border-color: #0F94CF;
-  outline: none;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 10px;
-  margin-left: auto;
-}
-
-.filter-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.filter-button.apply {
-  background: #0F94CF;
-  color: white;
-}
-
-.filter-button.apply:hover {
-  background: #0d7bb0;
-}
-
-.filter-button.reset {
-  background: #6c757d;
-  color: white;
-}
-
-.filter-button.reset:hover {
-  background: #5a6268;
-}
-
-/* Сообщения */
-.loading-message,
-.error-message {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #6c757d;
-}
-
-.error-message {
-  color: #dc3545;
-}
-
-.retry-button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  background: #0F94CF;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Таблица */
-.applications-table-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-.applications-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.applications-table th {
-  background: #203563;
-  color: white;
-  padding: 15px 12px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.applications-table td {
-  padding: 12px;
-  border-bottom: 1px solid #e9ecef;
-  font-size: 14px;
-}
-
-.application-row:hover {
-  background: #f8f9fa;
-}
-
-/* Статусы */
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.status-draft {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-submitted {
-  background: #cce7ff;
-  color: #004085;
-}
-
-.status-completed {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-rejected {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status-deleted {
-  background: #e2e3e5;
-  color: #383d41;
-}
-
-/* Действия */
-.view-button {
-  background: #0F94CF;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.view-button:hover {
-  background: #0d7bb0;
-}
-
-/* Нет заявок */
-.no-applications {
-  text-align: center;
-  padding: 60px 20px;
-  color: #6c757d;
-}
-
-.no-applications p {
-  font-size: 18px;
-  margin-bottom: 15px;
-}
-
-.clear-filters-button {
-  background: #0F94CF;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Статистика */
-.applications-stats {
-  text-align: center;
-  margin-top: 20px;
-  padding: 15px;
-  background: #e9ecef;
-  border-radius: 4px;
-  color: #495057;
-  font-size: 14px;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .applications-container {
-    padding: 10px;
-  }
-  
-  .filters-section {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .filter-actions {
-    margin-left: 0;
-    justify-content: center;
-  }
-  
-  .applications-table-container {
-    overflow-x: auto;
-  }
-  
-  .applications-table {
-    min-width: 800px;
-  }
-}
-
 /* FuelCombustionsList.css */
 .applications-container {
   max-width: 1200px;
@@ -266,7 +14,7 @@
   margin-bottom: 30px;
 }
 
-/* Фильтры */
+/* Фильтры - ФИКСИРУЕМ ВЫРАВНИВАНИЕ */
 .filters-section {
   background: white;
   padding: 25px;
@@ -276,7 +24,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  align-items: flex-end;
+  align-items: center; /* Изменил с flex-end на center */
 }
 
 .filter-group {
@@ -302,6 +50,8 @@
   font-size: 16px;
   transition: border-color 0.2s;
   width: 100%;
+  height: 46px; /* Добавил фиксированную высоту для выравнивания */
+  box-sizing: border-box; /* Важно! */
 }
 
 .filter-select:focus,
@@ -315,6 +65,8 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  align-self: flex-end; /* Выравниваем кнопку по низу */
+  height: 46px; /* Такая же высота как у полей ввода */
 }
 
 .filter-button {
@@ -327,6 +79,11 @@
   cursor: pointer;
   transition: all 0.2s;
   min-width: 160px;
+  height: 46px; /* Такая же высота как у полей ввода */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-button.apply {
@@ -369,6 +126,24 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+}
+
+/* Валидация */
+.validation-error {
+  background: #fff3cd;
+  color: #856404;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border: 1px solid #ffeaa7;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.date-hint {
+  color: #6c757d;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
 }
 
 /* Карточки в одну колонку */
@@ -515,7 +290,7 @@
   transform: translateY(-1px);
 }
 
-/* Нет заявок */
+/* Нет заявок - УБРАЛИ КНОПКУ */
 .no-applications {
   text-align: center;
   padding: 60px 20px;
@@ -527,23 +302,6 @@
 .no-applications p {
   font-size: 18px;
   color: #6c757d;
-  margin-bottom: 20px;
-}
-
-.clear-filters-button {
-  padding: 10px 20px;
-  background: #0F94CF;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.clear-filters-button:hover {
-  background: #0d7bb0;
 }
 
 /* Статистика */
@@ -591,6 +349,7 @@
   .filters-section {
     flex-direction: column;
     padding: 20px;
+    align-items: stretch;
   }
   
   .filter-group {
@@ -599,6 +358,8 @@
   
   .filter-actions {
     width: 100%;
+    align-self: stretch;
+    margin-top: 10px;
   }
   
   .filter-button {
@@ -626,34 +387,4 @@
     width: 100%;
     justify-content: flex-start;
   }
-}
-
-/* Добавьте в FuelCombustionsList.css */
-.date-hint {
-  color: #6c757d;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-/* Или можно сделать с маской ввода через JavaScript */
-.masked-date-input {
-  font-family: 'Manrope', monospace;
-  letter-spacing: 1px;
-}
-
-.validation-error {
-  background: #fff3cd;
-  color: #856404;
-  padding: 12px 20px;
-  border-radius: 6px;
-  border: 1px solid #ffeaa7;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.date-hint {
-  color: #6c757d;
-  font-size: 12px;
-  margin-top: 4px;
-  display: block;
 }

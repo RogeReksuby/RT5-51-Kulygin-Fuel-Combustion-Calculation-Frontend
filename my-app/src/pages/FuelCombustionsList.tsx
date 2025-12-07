@@ -180,7 +180,7 @@ const ApplicationsPage: FC = () => {
               placeholder="дд.мм.гггг"
               maxLength={10}
             />
-            <small className="date-hint">Формат: ДД.ММ.ГГГГ (пример: 28.11.2025)</small>
+            
           </div>
 
           <div className="filter-actions">
@@ -273,10 +273,6 @@ const ApplicationsPage: FC = () => {
             ) : (
               <div className="no-applications">
                 <p>Заявки не найдены</p>
-                <button onClick={() => {setStatusFilter(''); setSelectedDate(''); loadApplications();}} 
-                        className="clear-filters-button">
-                  Очистить фильтры
-                </button>
               </div>
             )}
           </div>
