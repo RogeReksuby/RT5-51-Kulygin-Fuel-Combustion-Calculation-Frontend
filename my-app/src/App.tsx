@@ -11,15 +11,15 @@ import FuelCombustionsList from "./pages/FuelCombustionsList";
 import "./App.css";
 import ProfilePage from "./pages/ProfilePge";
 import RegisterPage from "./pages/RegisterPage";
-import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import type { AppDispatch } from "./store";
+//import type { AppDispatch } from "./store";
 import { resetFirstLoad } from "./store/slices/userSlice";
 
 
 
 function App() {
-    const dispatch = useDispatch<AppDispatch>();
+    //const dispatch = useDispatch<AppDispatch>();
   
   useEffect(() => {
     // При загрузке приложения проверяем авторизацию

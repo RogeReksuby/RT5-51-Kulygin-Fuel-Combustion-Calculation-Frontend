@@ -24,7 +24,7 @@ export const Header: FC<HeaderProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Получаем данные из Redux store
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { /*user, */isAuthenticated } = useSelector((state: RootState) => state.user);
   const { cart } = useSelector((state: RootState) => state.applications);
 
   // Обработчик выхода из системы

@@ -157,7 +157,7 @@ const ApplicationPage: FC = () => {
     
     try {
       // Обновляем UI - показываем что идет сохранение
-      const savingFuels = { ...fuelVolumeInputs };
+      //const savingFuels = { ...fuelVolumeInputs };
       // Здесь можно добавить индикатор загрузки если нужно
       
       await api.api.fuelCombustionsUpdate({

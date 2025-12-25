@@ -96,7 +96,7 @@ export const checkAuth = createAsyncThunk(
       const userData = response.data;
       const isModerator = userData?.is_moderator || userData?.isModerator || false;
       
-      console.log('✅ Проверка авторизации, isModerator:', isModerator);
+      console.log('Проверка авторизации, isModerator:', isModerator);
       
       return {
         user: userData,
