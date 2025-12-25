@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import filtersReducer from './slices/filtersSlice';
 import userReducer from './slices/userSlice';
-import applicationsReducer from './slices/applicationsSlice';
+import combustionsReducer from './slices/applicationsSlice';
+import fuelsReducer from './slices/fuelsSlice';
 
 // Создаем главное почтовое отделение
 export const store = configureStore({
   reducer: {
     filters: filtersReducer,     // Отдел фильтров
     user: userReducer,           // Отдел пользователей (НОВЫЙ)
-    applications: applicationsReducer, // Отдел заявок (НОВЫЙ)
+    combustions: combustionsReducer, // Отдел заявок (НОВЫЙ)
+    fuels: fuelsReducer,
   },
 });
 

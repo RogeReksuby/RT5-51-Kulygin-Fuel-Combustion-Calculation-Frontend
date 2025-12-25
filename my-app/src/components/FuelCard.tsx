@@ -1,7 +1,8 @@
+// components/FuelCard.tsx
 import { type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
-import { addFuelToApplication } from '../store/slices/applicationsSlice';
+import { addFuelToCombustion } from '../store/slices/applicationsSlice';
 import './FuelCard.css';
 import DefaultImage from '../assets/DefaultImage.jpg';
 import { transformImageUrl } from '../target_config';
@@ -26,25 +27,27 @@ export const FuelCard: FC<Props> = ({
   const dispatch = useDispatch<AppDispatch>();
   
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
-  const { loading } = useSelector((state: RootState) => state.applications);
+  const { loading: combustionsLoading, error: combustionsError } = useSelector((state: RootState) => state.combustions);
 
   const handleAddToApplication = async () => {
     if (!isAuthenticated) {
-      alert('Для добавления в заявку необходимо авторизоваться');
+      alert('Для добавления в расчет необходимо авторизоваться');
       return;
     }
 
     try {
-      await dispatch(addFuelToApplication(id)).unwrap();
+      // Используем unwrap() для автоматической обработки ошибок
+      await dispatch(addFuelToCombustion(id)).unwrap();
       
+      // Успешно добавлено - обновляем корзину
       if (onFuelAdded) {
         onFuelAdded();
       }
 
-      console.log(`Топливо "${title}" добавлено в заявку`);
-    } catch (error) {
-      console.error('Ошибка при добавлении в заявку:', error);
-      alert('Не удалось добавить топливо в заявку');
+      console.log(`Топливо "${title}" добавлено в расчет`);
+    } catch (error: any) {
+      console.error('Ошибка при добавлении в расчет:', error);
+      alert(error.message || 'Не удалось добавить топливо в расчет');
     }
   };
 
@@ -79,15 +82,15 @@ export const FuelCard: FC<Props> = ({
         <div className="cardApplicationSection">
           {isAuthenticated ? (
             <button 
-              className={`addToApplicationBtn ${loading ? 'loading' : ''}`}
+              className={`addToApplicationBtn ${combustionsLoading ? 'loading' : ''}`}
               onClick={handleAddToApplication}
-              disabled={loading}
+              disabled={combustionsLoading}
             >
-              {loading ? 'Добавление...' : 'В заявку'}
+              {combustionsLoading ? 'Добавление...' : 'В расчет'}
             </button>
           ) : (
             <div className="loginPrompt">
-              <small>Войдите, чтобы добавить в заявку</small>
+              <small>Войдите, чтобы добавить в расчет</small>
             </div>
           )}
         </div>

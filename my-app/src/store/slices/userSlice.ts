@@ -111,6 +111,53 @@ export const checkAuth = createAsyncThunk(
   }
 );
 
+export const registerUser = createAsyncThunk(
+  'user/register',
+  async (userData: {
+    login: string;
+    password: string;
+    name: string;
+  }, { rejectWithValue }) => {
+    try {
+      const response = await api.api.usersRegisterCreate(userData);
+      
+      // Сохраняем токен
+      const token = response.data.access_token || null;
+      setAuthToken(token);
+      localStorage.setItem('token', token || '');
+      
+      // Определяем isModerator
+      const userDataResponse = response.data.user || null;
+      const isModerator = userDataResponse?.is_moderator || false;
+      
+      console.log('👤 Регистрация успешна, isModerator:', isModerator);
+      
+      return {
+        user: userDataResponse,
+        isModerator: isModerator
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.description || 'Ошибка регистрации');
+    }
+  }
+);
+
+// Обновление профиля пользователя
+export const updateUserProfile = createAsyncThunk(
+  'user/updateProfile',
+  async (profileData: {
+    name?: string;
+    login?: string;
+  }, { rejectWithValue }) => {
+    try {
+      const response = await api.api.usersProfileUpdate(profileData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.description || 'Ошибка обновления профиля');
+    }
+  }
+);
+
 // Функция для принудительного сброса флага (на случай если нужно перезагрузить)
 export const resetFirstLoad = () => {
   isFirstLoad = true;
@@ -188,8 +235,24 @@ const userSlice = createSlice({
         state.isAuthenticated = false;
         state.isModerator = false;  // Сбрасываем isModerator
         state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload.user;
+      state.isModerator = action.payload.isModerator;
+      state.isAuthenticated = true;
+      state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
       });
-  },
+    },
 });
 
 export const { clearError, resetAuthState, setIsModerator } = userSlice.actions;

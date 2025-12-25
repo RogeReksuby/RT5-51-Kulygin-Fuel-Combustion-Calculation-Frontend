@@ -32,6 +32,15 @@ const formatDateForBackend = (dateString: string): string => {
   return '';
 };
 
+// Функция для получения сегодняшней даты в формате ДД.ММ.ГГГГ
+const getTodayDate = (): string => {
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, '0');
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const year = today.getFullYear();
+  return `${day}.${month}.${year}`;
+};
+
 const ApplicationsPage: FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isModerator } = useSelector((state: RootState) => state.user);
@@ -40,10 +49,25 @@ const ApplicationsPage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Фильтры
+  // Состояния для текущих значений фильтров
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [startDateFilter, setStartDateFilter] = useState<string>('');
+  const [endDateFilter, setEndDateFilter] = useState<string>('');
   const [creatorFilter, setCreatorFilter] = useState<string>('');
+  
+  // Состояния для активных фильтров (которые применяются)
+  const [activeStatusFilter, setActiveStatusFilter] = useState<string>('');
+  const [activeStartDateFilter, setActiveStartDateFilter] = useState<string>('');
+  const [activeEndDateFilter, setActiveEndDateFilter] = useState<string>('');
+  const [activeCreatorFilter, setActiveCreatorFilter] = useState<string>('');
+
+  // Устанавливаем сегодняшнюю дату в поля фильтров при первой загрузке
+  useEffect(() => {
+    const today = getTodayDate();
+    setStartDateFilter(today);
+    setEndDateFilter(today);
+    // НЕ устанавливаем активные фильтры, чтобы не применять их автоматически
+  }, []);
 
   // Список уникальных создателей для выпадающего списка
   const uniqueCreators = useMemo(() => {
@@ -61,21 +85,25 @@ const ApplicationsPage: FC = () => {
     return ['Все создатели', ...Array.from(creators).sort()];
   }, [applications, isModerator]);
 
-  // Функция для загрузки заявок
+  // Функция для загрузки заявок с активными фильтрами
   const loadApplications = useCallback(async () => {
     try {
       const queryParams: any = {};
 
-      if (statusFilter) {
-        queryParams.status = statusFilter;
+      if (activeStatusFilter) {
+        queryParams.status = activeStatusFilter;
       }
       
-      if (selectedDate) {
-        const formattedDate = formatDateForBackend(selectedDate);
-        if (formattedDate) {
-          queryParams.start_date = formattedDate;
-          queryParams.end_date = formattedDate;
-        }
+      // Используем активные фильтры для начальной и конечной даты
+      const formattedStartDate = formatDateForBackend(activeStartDateFilter);
+      const formattedEndDate = formatDateForBackend(activeEndDateFilter);
+      
+      if (formattedStartDate) {
+        queryParams.start_date = formattedStartDate;
+      }
+      
+      if (formattedEndDate) {
+        queryParams.end_date = formattedEndDate;
       }
 
       const response = await api.api.combustionsList(queryParams);
@@ -93,28 +121,28 @@ const ApplicationsPage: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, selectedDate]);
+  }, [activeStatusFilter, activeStartDateFilter, activeEndDateFilter]);
 
   // Фильтрация заявок на фронтенде (по создателю)
   const filteredApplications = useMemo(() => {
-    if (!isModerator || !creatorFilter || creatorFilter === 'Все создатели') {
+    if (!isModerator || !activeCreatorFilter || activeCreatorFilter === 'Все создатели') {
       return applications;
     }
     
     return applications.filter(app => {
       const creatorName = app.creator_login || '';
-      return creatorName.toLowerCase().includes(creatorFilter.toLowerCase());
+      return creatorName.toLowerCase().includes(activeCreatorFilter.toLowerCase());
     });
-  }, [applications, creatorFilter, isModerator]);
+  }, [applications, activeCreatorFilter, isModerator]);
 
-  // Первоначальная загрузка и short polling
+  // Первоначальная загрузка
   useEffect(() => {
     if (!isAuthenticated) {
       navigate(ROUTES.LOGIN);
       return;
     }
 
-    // Первоначальная загрузка
+    // Загружаем данные без фильтров при первой загрузке
     loadApplications();
 
     // Настраиваем интервал опроса каждую секунду
@@ -126,7 +154,36 @@ const ApplicationsPage: FC = () => {
     };
   }, [isAuthenticated, navigate, loadApplications]);
 
+  // Применение фильтров
   const handleApplyFilters = () => {
+    // Устанавливаем активные фильтры равными текущим значениям
+    setActiveStatusFilter(statusFilter);
+    setActiveStartDateFilter(startDateFilter);
+    setActiveEndDateFilter(endDateFilter);
+    setActiveCreatorFilter(creatorFilter);
+    
+    // Загружаем данные с новыми фильтрами
+    loadApplications();
+  };
+
+  // Сброс фильтров
+  const handleResetFilters = () => {
+    // Сбрасываем текущие значения фильтров
+    setStatusFilter('');
+    
+    const today = getTodayDate();
+    setStartDateFilter(today);
+    setEndDateFilter(today);
+    
+    setCreatorFilter('');
+    
+    // Сбрасываем активные фильтры
+    setActiveStatusFilter('');
+    setActiveStartDateFilter('');
+    setActiveEndDateFilter('');
+    setActiveCreatorFilter('');
+    
+    // Загружаем данные без фильтров
     loadApplications();
   };
 
@@ -200,6 +257,12 @@ const ApplicationsPage: FC = () => {
     return app.creator_login || 'Неизвестно';
   };
 
+  // Проверка, применены ли какие-либо фильтры
+  const hasActiveFilters = useMemo(() => {
+    return !!activeStatusFilter || !!activeStartDateFilter || 
+           !!activeEndDateFilter || (!!activeCreatorFilter && activeCreatorFilter !== 'Все создатели');
+  }, [activeStatusFilter, activeStartDateFilter, activeEndDateFilter, activeCreatorFilter]);
+
   if (!isAuthenticated) {
     return null;
   }
@@ -213,8 +276,24 @@ const ApplicationsPage: FC = () => {
           {isModerator ? 'Все заявки (панель модератора)' : 'Мои заявки'}
         </h1>
 
-        {/* Информация для модератора */}
-
+        {/* Информация о примененных фильтрах */}
+        {hasActiveFilters && (
+          <div className="active-filters">
+            <strong>Примененные фильтры:</strong>
+            {activeStatusFilter && (
+              <span className="filter-tag">Статус: {getStatusText(activeStatusFilter)}</span>
+            )}
+            {activeStartDateFilter && (
+              <span className="filter-tag">Дата с: {activeStartDateFilter}</span>
+            )}
+            {activeEndDateFilter && (
+              <span className="filter-tag">Дата по: {activeEndDateFilter}</span>
+            )}
+            {activeCreatorFilter && activeCreatorFilter !== 'Все создатели' && (
+              <span className="filter-tag">Создатель: {activeCreatorFilter}</span>
+            )}
+          </div>
+        )}
 
         {/* Фильтры */}
         <div className="filters-section">
@@ -235,12 +314,25 @@ const ApplicationsPage: FC = () => {
           </div>
 
           <div className="filter-group">
-            <label htmlFor="dateFilter">Дата:</label>
+            <label htmlFor="startDateFilter">Дата с:</label>
             <input 
               type="text"
-              id="dateFilter"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
+              id="startDateFilter"
+              value={startDateFilter}
+              onChange={(e) => setStartDateFilter(e.target.value)}
+              className="filter-input"
+              placeholder="дд.мм.гггг"
+              maxLength={10}
+            />
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="endDateFilter">Дата по:</label>
+            <input 
+              type="text"
+              id="endDateFilter"
+              value={endDateFilter}
+              onChange={(e) => setEndDateFilter(e.target.value)}
               className="filter-input"
               placeholder="дд.мм.гггг"
               maxLength={10}
@@ -273,20 +365,28 @@ const ApplicationsPage: FC = () => {
             >
               Применить фильтры
             </button>
+            
           </div>
         </div>
 
-        {/* Информация о фильтрации по создателю */}
-        {isModerator && creatorFilter && creatorFilter !== 'Все создатели' && (
-          <div className="filter-notice">
-            🔍 Фильтр по создателю: <strong>{creatorFilter}</strong> (работает локально на фронтенде)
+        {/* Сообщения об ошибках валидации дат */}
+        {startDateFilter && !formatDateForBackend(startDateFilter) && (
+          <div className="validation-error">
+            ⚠️ Введите начальную дату в формате ДД.ММ.ГГГГ
           </div>
         )}
 
-        {/* Сообщения об ошибках валидации */}
-        {selectedDate && !formatDateForBackend(selectedDate) && (
+        {endDateFilter && !formatDateForBackend(endDateFilter) && (
           <div className="validation-error">
-            ⚠️ Введите дату в формате ДД.ММ.ГГГГ
+            ⚠️ Введите конечную дату в формате ДД.ММ.ГГГГ
+          </div>
+        )}
+
+        {/* Проверка, что начальная дата не позже конечной */}
+        {formatDateForBackend(startDateFilter) && formatDateForBackend(endDateFilter) && 
+          startDateFilter > endDateFilter && (
+          <div className="validation-error">
+            ⚠️ Начальная дата не может быть позже конечной
           </div>
         )}
 
@@ -401,7 +501,7 @@ const ApplicationsPage: FC = () => {
             ) : (
               <div className="no-applications">
                 <p>Заявки не найдены</p>
-                {(statusFilter || selectedDate || creatorFilter) && (
+                {hasActiveFilters && (
                   <p className="no-results-hint">
                     Попробуйте изменить параметры фильтрации
                   </p>
@@ -424,9 +524,9 @@ const ApplicationsPage: FC = () => {
                     {filteredApplications.filter(app => app.status === 'сформирован').length}
                   </strong>
                 </div>
-                {creatorFilter && creatorFilter !== 'Все создатели' && (
+                {activeCreatorFilter && activeCreatorFilter !== 'Все создатели' && (
                   <div className="creator-filter-info">
-                    Фильтр по создателю: <strong>{creatorFilter}</strong> (локальный)
+                    Фильтр по создателю: <strong>{activeCreatorFilter}</strong> (локальный)
                   </div>
                 )}
               </>

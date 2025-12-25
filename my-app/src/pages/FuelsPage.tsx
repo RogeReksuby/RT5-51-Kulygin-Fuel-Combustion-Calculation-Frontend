@@ -1,91 +1,85 @@
-import { type FC, useState, useEffect } from 'react';
-import { getFuels, getCombustionCartCount } from '../modules/Api';
-import { type Fuel } from '../modules/types'
+// pages/FuelsPage.tsx
+import { type FC, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../store';
+import { 
+  getFuelsList,
+  getFuelById 
+} from '../store/slices/fuelsSlice';
+import { 
+  addFuelToCombustion,
+  getCombustionCartCount 
+} from '../store/slices/applicationsSlice';
+import { 
+  useSearchQuery,
+  setSearchQuery,
+} from '../store/slices/filtersSlice';
+import { type Fuel } from '../modules/types';
 import InputField from '../components/InputField';
 import { Breadcrumbs } from '../components/BreadCrumbs';
 import { FuelCard } from '../components/FuelCard';
 import { ROUTES } from '../../Routes';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { 
-  useSearchQuery,
-  setSearchQuery,
-} from '../store/slices/filtersSlice'
-import type { RootState } from '../store';
 import './FuelsPage.css';
 import './universal.css';
-import korzina from '../assets/korzinaGPORENIE.png'
+import korzina from '../assets/korzinaGPORENIE.png';
 import { Header } from '../components/FuelHeader';
 import { Footer } from '../components/FuelFooter';
 
 const FuelsPage: FC = () => {
-  const dispatch = useDispatch();
-  const searchQuery = useSearchQuery();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   
-  // Локальный state для корзины
-  const [cartCount, setCartCount] = useState(0);
-  const [cartAppId, setCartAppId] = useState<number | undefined>(undefined);
-
+  // Используем состояние из Redux store
+  const searchQuery = useSearchQuery();
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
-  const [fuels, setFuels] = useState<Fuel[]>([]);
+  const { cart, loading: cartLoading } = useSelector((state: RootState) => state.combustions);
+  const { fuels, loading: fuelsLoading } = useSelector((state: RootState) => state.fuels);
 
+  // Загружаем данные при монтировании компонента
   useEffect(() => {
-    loadFuels();
-    loadCartCount();
-  }, []);
-
-  // Функция загрузки данных корзины
-  const loadCartCount = async () => {
-    try {
-      const cartData = await getCombustionCartCount();
-      setCartCount(cartData.count || 0);
-      setCartAppId(cartData.app_id);
-      console.log('Cart data loaded:', cartData);
-    } catch (error) {
-      console.error('Error loading cart count:', error);
-      setCartCount(0);
+    // Загружаем список топлива
+    dispatch(getFuelsList({ title: searchQuery }));
+    
+    // Если пользователь авторизован, загружаем данные корзины
+    if (isAuthenticated) {
+      dispatch(getCombustionCartCount());
     }
-  };
+  }, [dispatch, isAuthenticated]);
 
-  // ОБРАБОТЧИК КЛИКА НА КОРЗИНУ
-  const handleCartClick = () => {
-    if (cartAppId && cartCount > 0) {
-      navigate(`${ROUTES.APPLICATIONS}/${cartAppId}`);
+  // Обработчик клика на корзину
+  const handleCartClick = useCallback(() => {
+    if (cart.app_id && cart.count && cart.count > 0) {
+      navigate(`${ROUTES.APPLICATIONS}/${cart.app_id}`);
     } else {
       console.log('Корзина пуста или app_id отсутствует');
-      alert('Корзина пуста или заявка не создана');
+      alert('Корзина пуста или расчет не создан');
     }
-  };
+  }, [cart.app_id, cart.count, navigate]);
 
-  // ФУНКЦИЯ ДЛЯ ОБНОВЛЕНИЯ КОРЗИНЫ ПОСЛЕ ДОБАВЛЕНИЯ ТОПЛИВА
-  const refreshCart = async () => {
-    await loadCartCount();
-  };
+  // Функция для обновления корзины после добавления топлива
+  const refreshCart = useCallback(() => {
+    if (isAuthenticated) {
+      dispatch(getCombustionCartCount());
+    }
+  }, [dispatch, isAuthenticated]);
 
-  const loadFuels = async () => {
-    try {
-      const data = await getFuels({
-        searchQuery: searchQuery
-      });
-      setFuels(data);
-    } catch (error) {
-      console.error('Error loading fuels:', error);
-      setFuels([]);
-    } 
-  };
+  // Загрузка топлива с фильтрацией
+  const loadFuels = useCallback(() => {
+    dispatch(getFuelsList({ title: searchQuery }));
+  }, [dispatch, searchQuery]);
 
-  const handleSearchChange = (value: string) => {
+  const handleSearchChange = useCallback((value: string) => {
     dispatch(setSearchQuery(value));
-  }
+  }, [dispatch]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     loadFuels();
-  };
+  }, [loadFuels]);
 
-  const handleDetailsClick = (id: number) => {
+  const handleDetailsClick = useCallback((id: number) => {
     navigate(`${ROUTES.FUELS}/${id}`);
-  };
+  }, [navigate]);
 
   return (
     <div>
@@ -93,7 +87,8 @@ const FuelsPage: FC = () => {
         title="Расчет энергии сгорания топлива"
         subtitle="Расчет количества теплоты в кДж, выделившихся при полном сгорании топлива при н.у."
       />
-      <Breadcrumbs/>
+      <Breadcrumbs />
+      
       <div className="contentAll">
         <div className="searchTitle">
           <div className="searchBlankFrame"></div>
@@ -112,19 +107,28 @@ const FuelsPage: FC = () => {
           </div>
           
           <div className="buckFrame">
-            {cartCount !== 0 && isAuthenticated && cartAppId ? (
+            {isAuthenticated && cart.count && cart.count > 0 ? (
               <button 
                 className="buttonBuck" 
                 onClick={handleCartClick}
+                disabled={cartLoading}
               >
                 <img src={korzina} alt="Корзина" />
-                <div className="circleBuck">{cartCount}</div>
+                {!cartLoading && (
+                  <div className="circleBuck">{cart.count}</div>
+                )}
+                {cartLoading && (
+                  <div className="circleBuck loading">...</div>
+                )}
               </button>
             ) : (
               <button className="buttonBuck empty-cart" disabled>
                 <img src={korzina} alt="Корзина" />
-                {cartCount > 0 && (
-                  <div className="circleBuck">{cartCount}</div>
+                {isAuthenticated && cart.count && cart.count > 0 && !cartLoading && (
+                  <div className="circleBuck">{cart.count}</div>
+                )}
+                {cartLoading && (
+                  <div className="circleBuck loading">...</div>
                 )}
               </button>
             )}
@@ -132,14 +136,22 @@ const FuelsPage: FC = () => {
         </div>
 
         <div className="content">
-          {fuels.map((fuel) => (
-            <FuelCard
-              key={fuel.id}
-              {...fuel}
-              onDetailsClick={handleDetailsClick}
-              onFuelAdded={refreshCart} // ← ПЕРЕДАЕМ ФУНКЦИЮ ОБНОВЛЕНИЯ
-            />
-          ))}
+          {fuelsLoading ? (
+            <div className="loading-indicator">Загрузка топлива...</div>
+          ) : fuels.length === 0 ? (
+            <div className="empty-state">
+              {searchQuery ? 'По вашему запросу ничего не найдено' : 'Топливо не найдено'}
+            </div>
+          ) : (
+            fuels.map((fuel: Fuel) => (
+              <FuelCard
+                key={fuel.id}
+                {...fuel}
+                onDetailsClick={handleDetailsClick}
+                onFuelAdded={refreshCart}
+              />
+            ))
+          )}
         </div>
       </div>
 

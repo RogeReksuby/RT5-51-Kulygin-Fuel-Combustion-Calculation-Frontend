@@ -16,7 +16,7 @@ export const Header: FC = () => {
 
     // Получаем данные из Redux store
     const { /*user,*/ isAuthenticated } = useSelector((state: RootState) => state.user);
-    const { cart } = useSelector((state: RootState) => state.applications);
+    const { cart } = useSelector((state: RootState) => state.combustions);
 
     // Обработчик выхода из системы
     const handleLogout = async () => {
@@ -55,18 +55,7 @@ export const Header: FC = () => {
                     {/* КНОПКИ ДЛЯ АВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ */}
                     {isAuthenticated ? (
                         <>
-                            {/* КОРЗИНА */}
-                            {cart.app_id && (
-                                <button 
-                                    className="bButton cart-button"
-                                    onClick={handleCartClick}
-                                >
-                                    🛒 Корзина 
-                                    {cart.count && cart.count > 0 && (
-                                        <span className="cart-badge">{cart.count}</span>
-                                    )}
-                                </button>
-                            )}
+                            
                             
                             {/* МОИ ЗАЯВКИ */}
                             <button 
