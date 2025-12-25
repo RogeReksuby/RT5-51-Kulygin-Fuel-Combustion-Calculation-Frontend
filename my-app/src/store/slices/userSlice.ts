@@ -1,3 +1,4 @@
+// store/slices/userSlice.ts
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api, setAuthToken } from '../../api';
 import type { DsUsers, HandlerLoginRequest } from '../../api/Api';
@@ -5,43 +6,48 @@ import type { DsUsers, HandlerLoginRequest } from '../../api/Api';
 interface UserState {
   user: DsUsers | null;
   isAuthenticated: boolean;
-  isModerator: boolean;  // Заменяем role на isModerator
+  isModerator: boolean;
   loading: boolean;
   error: string | null;
+  isAppInitialized: boolean; // Добавляем флаг инициализации
+}
+
+// Типы для ответа от API при успешном логине/регистрации
+interface AuthSuccessResponse {
+  user: DsUsers | null;
+  isModerator: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   isAuthenticated: false,
-  isModerator: false,  // По умолчанию не модератор
+  isModerator: false,
   loading: false,
   error: null,
+  isAppInitialized: false, // По умолчанию приложение не инициализировано
 };
 
-// Флаг для определения первой загрузки
-let isFirstLoad = true;
-
 // Асинхронное действие для логина
-export const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk<
+  AuthSuccessResponse,
+  HandlerLoginRequest,
+  { rejectValue: string }
+>(
   'user/login',
   async (credentials: HandlerLoginRequest, { rejectWithValue }) => {
     try {
       const response = await api.api.usersLoginCreate(credentials);
       
-      // Сохраняем токен
+      // Сохраняем токен в localStorage
       const token = response.data.access_token || null;
       setAuthToken(token);
-      
-      console.log('🔐 Токен получен:', token);
-      console.log('💾 Сохраняем в localStorage...');
-      
       localStorage.setItem('token', token || '');
       
-      // Возвращаем user и определяем isModerator
+      // Определяем isModerator
       const userData = response.data.user || null;
-      const isModerator = userData?.is_moderator || userData?.is_moderator || false; // Проверяем разные варианты названия поля
+      const isModerator = userData?.is_moderator || false;
       
-      console.log('👤 Пользователь isModerator:', isModerator);
+      console.log('✅ Логин успешен, токен сохранен, isModerator:', isModerator);
       
       return {
         user: userData,
@@ -54,11 +60,16 @@ export const loginUser = createAsyncThunk(
 );
 
 // Выход из системы
-export const logoutUser = createAsyncThunk(
+export const logoutUser = createAsyncThunk<
+  null,
+  void,
+  { rejectValue: string }
+>(
   'user/logout',
   async (_, { rejectWithValue }) => {
     try {
       await api.api.usersLogoutCreate();
+      // При выходе удаляем токен из localStorage
       setAuthToken(null);
       localStorage.removeItem('token');
       return null;
@@ -68,24 +79,39 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-export const checkAuth = createAsyncThunk(
-  'user/checkAuth',
+// Проверка авторизации при ЗАГРУЗКЕ ПРИЛОЖЕНИЯ
+export const checkInitialAuth = createAsyncThunk<
+  AuthSuccessResponse,
+  void,
+  { rejectValue: string }
+>(
+  'user/checkInitialAuth',
   async (_, { rejectWithValue }) => {
-    // Если это первая загрузка - ВСЕГДА возвращаем ошибку
-    if (isFirstLoad) {
-      isFirstLoad = false;
-      console.log('🔄 Первая загрузка приложения - сбрасываем авторизацию');
-      localStorage.removeItem('token'); // Очищаем токен
-      setAuthToken(null); // Сбрасываем токен в axios
-      return rejectWithValue('Требуется вход после перезагрузки');
-    }
+    // Только для первоначальной загрузки приложения
+    const token = localStorage.getItem('token');
+    console.log('🔄 Проверка авторизации при загрузке приложения: токен', token ? 'есть' : 'нет');
     
-    // Для последующих проверок (при переходе между страницами) работаем как обычно
+    // Всегда сбрасываем авторизацию при ПЕРВОЙ загрузке
+    setAuthToken(null);
+    
+    // Всегда возвращаем ошибку - это заставит пользователя войти заново
+    return rejectWithValue('Требуется вход после перезагрузки');
+  }
+);
+
+// Нормальная проверка авторизации (для использования в компонентах)
+export const verifyAuth = createAsyncThunk<
+  AuthSuccessResponse,
+  void,
+  { rejectValue: string }
+>(
+  'user/verifyAuth',
+  async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
       
       if (!token) {
-        console.log('checkAuth: токен не найден');
+        console.log('verifyAuth: токен не найден');
         return rejectWithValue('No token');
       }
 
@@ -94,30 +120,34 @@ export const checkAuth = createAsyncThunk(
       
       // Определяем isModerator из ответа
       const userData = response.data;
-      const isModerator = userData?.is_moderator || userData?.isModerator || false;
+      const isModerator = userData?.is_moderator || false;
       
-      console.log('Проверка авторизации, isModerator:', isModerator);
+      console.log('✅ Проверка авторизации успешна, isModerator:', isModerator);
       
       return {
         user: userData,
         isModerator: isModerator
       };
     } catch (error: any) {
-      console.error('checkAuth: ошибка:', error);
+      console.error('verifyAuth: ошибка:', error);
       setAuthToken(null);
-      localStorage.removeItem('token');
       return rejectWithValue('Токен устарел');
     }
   }
 );
 
-export const registerUser = createAsyncThunk(
-  'user/register',
-  async (userData: {
+// Регистрация нового пользователя
+export const registerUser = createAsyncThunk<
+  AuthSuccessResponse,
+  {
     login: string;
     password: string;
     name: string;
-  }, { rejectWithValue }) => {
+  },
+  { rejectValue: string }
+>(
+  'user/register',
+  async (userData, { rejectWithValue }) => {
     try {
       const response = await api.api.usersRegisterCreate(userData);
       
@@ -143,13 +173,23 @@ export const registerUser = createAsyncThunk(
 );
 
 // Обновление профиля пользователя
-export const updateUserProfile = createAsyncThunk(
-  'user/updateProfile',
-  async (profileData: {
+export const updateUserProfile = createAsyncThunk<
+  any,
+  {
     name?: string;
     login?: string;
-  }, { rejectWithValue }) => {
+  },
+  { rejectValue: string }
+>(
+  'user/updateProfile',
+  async (profileData, { rejectWithValue }) => {
     try {
+      // Устанавливаем токен перед запросом
+      const token = localStorage.getItem('token');
+      if (token) {
+        setAuthToken(token);
+      }
+      
       const response = await api.api.usersProfileUpdate(profileData);
       return response.data;
     } catch (error: any) {
@@ -158,11 +198,6 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
-// Функция для принудительного сброса флага (на случай если нужно перезагрузить)
-export const resetFirstLoad = () => {
-  isFirstLoad = true;
-};
-
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -170,18 +205,23 @@ const userSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-    // Редюсер для принудительного сброса состояния при перезагрузке
+    // Редюсер для принудительного сброса состояния (без удаления токена)
     resetAuthState: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      state.isModerator = false;  // Сбрасываем isModerator
+      state.isModerator = false;
       state.loading = false;
       state.error = null;
+      // НЕ удаляем токен из localStorage!
       setAuthToken(null);
     },
     // Редюсер для обновления isModerator (если нужно вручную)
     setIsModerator: (state, action) => {
       state.isModerator = action.payload;
+    },
+    // Редюсер для установки флага инициализации
+    setAppInitialized: (state) => {
+      state.isAppInitialized = true;
     }
   },
   extraReducers: (builder) => {
@@ -194,66 +234,117 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.isModerator = action.payload.isModerator;  // Сохраняем isModerator
+        state.isModerator = action.payload.isModerator;
         state.isAuthenticated = true;
         state.error = null;
-        console.log('✅ Логин успешен, isModerator:', action.payload.isModerator);
+        state.isAppInitialized = true; // Приложение инициализировано после логина
+        console.log('✅ Пользователь авторизован, состояние обновлено');
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
-        state.isModerator = false;  // Сбрасываем isModerator при ошибке
+        state.isModerator = false;
       })
       
       // Логаут
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
-        state.isModerator = false;  // Сбрасываем isModerator
+        state.isModerator = false;
         state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       })
       
-      // Проверка авторизации
-      .addCase(checkAuth.pending, (state) => {
+      // Проверка авторизации при ЗАГРУЗКЕ - ВСЕГДА завершается с ошибкой
+      .addCase(checkInitialAuth.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(checkAuth.fulfilled, (state, action) => {
+      .addCase(checkInitialAuth.fulfilled, (state, action) => {
+        // Эта ветка никогда не выполнится при текущей логике
         state.loading = false;
         state.user = action.payload.user;
-        state.isModerator = action.payload.isModerator;  // Сохраняем isModerator
+        state.isModerator = action.payload.isModerator;
         state.isAuthenticated = true;
+        state.isAppInitialized = true;
         state.error = null;
-        console.log('✅ Авторизация проверена, isModerator:', action.payload.isModerator);
+        console.log('Авторизация при загрузке успешна (не должно происходить)');
       })
-      .addCase(checkAuth.rejected, (state) => {
+      .addCase(checkInitialAuth.rejected, (state, action) => {
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
-        state.isModerator = false;  // Сбрасываем isModerator
+        state.isModerator = false;
+        state.isAppInitialized = true; // Важно: приложение инициализировано!
+        state.error = null;
+        console.log('✅ Авторизация сброшена при загрузке приложения (перезагрузка страницы)');
+      })
+      
+      // Нормальная проверка авторизации
+      .addCase(verifyAuth.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(verifyAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isModerator = action.payload.isModerator;
+        state.isAuthenticated = true;
+        state.error = null;
+        console.log('✅ Авторизация проверена успешно');
+      })
+      .addCase(verifyAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.isModerator = false;
+        state.error = null;
+        console.log('❌ Авторизация недействительна');
+      })
+      
+      // Регистрация
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-      state.loading = false;
-      state.user = action.payload.user;
-      state.isModerator = action.payload.isModerator;
-      state.isAuthenticated = true;
-      state.error = null;
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isModerator = action.payload.isModerator;
+        state.isAuthenticated = true;
+        state.isAppInitialized = true;
+        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      
+      // Обновление профиля
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
-      if (state.user) {
-        state.user = { ...state.user, ...action.payload };
-      }
+        state.loading = false;
+        if (state.user) {
+          state.user = { ...state.user, ...action.payload };
+        }
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
-    },
+  },
 });
 
-export const { clearError, resetAuthState, setIsModerator } = userSlice.actions;
+export const { 
+  clearError, 
+  resetAuthState, 
+  setIsModerator,
+  setAppInitialized 
+} = userSlice.actions;
+
 export default userSlice.reducer;

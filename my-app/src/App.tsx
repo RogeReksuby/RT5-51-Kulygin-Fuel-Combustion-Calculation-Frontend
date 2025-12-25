@@ -1,3 +1,4 @@
+// App.tsx (без изменений, только убедитесь что AppInitializer подключен)
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import FuelsPage from "./pages/FuelsPage";
@@ -11,22 +12,13 @@ import FuelCombustionsList from "./pages/FuelCombustionsList";
 import "./App.css";
 import ProfilePage from "./pages/ProfilePge";
 import RegisterPage from "./pages/RegisterPage";
-//import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-//import type { AppDispatch } from "./store";
-import { resetFirstLoad } from "./store/slices/userSlice";
-
-
+// Импортируем ProtectedRoute если используете
+// import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-    //const dispatch = useDispatch<AppDispatch>();
-  
-  useEffect(() => {
-    // При загрузке приложения проверяем авторизацию
-    resetFirstLoad();
-  }, []);
   return (
     <BrowserRouter basename={BASE_PATH}>
+      {/* AppInitializer отвечает за инициализацию авторизации */}
       <AppInitializer />
       <Routes>
         <Route path={ROUTES.HOME} element={<HomePage />} />
