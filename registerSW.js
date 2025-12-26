@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/web_rip_front/sw.js', { scope: '/web_rip_front/' })})}
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/RT5-51-Kulygin-Fuel-Combustion-Calculation-Frontend/sw.js', { scope: '/RT5-51-Kulygin-Fuel-Combustion-Calculation-Frontend/' })})}
