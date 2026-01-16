@@ -1,14 +1,12 @@
 // pages/FuelsPage.tsx
-import { type FC, useState, useEffect, useCallback } from 'react';
+import { type FC, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
 import { 
   getFuelsList,
-  getFuelById 
 } from '../store/slices/fuelsSlice';
 import { 
-  addFuelToCombustion,
   getCombustionCartCount 
 } from '../store/slices/applicationsSlice';
 import { 

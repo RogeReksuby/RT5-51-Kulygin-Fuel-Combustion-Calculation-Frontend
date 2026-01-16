@@ -166,26 +166,6 @@ const ApplicationsPage: FC = () => {
     loadApplications();
   };
 
-  // Сброс фильтров
-  const handleResetFilters = () => {
-    // Сбрасываем текущие значения фильтров
-    setStatusFilter('');
-    
-    const today = getTodayDate();
-    setStartDateFilter(today);
-    setEndDateFilter(today);
-    
-    setCreatorFilter('');
-    
-    // Сбрасываем активные фильтры
-    setActiveStatusFilter('');
-    setActiveStartDateFilter('');
-    setActiveEndDateFilter('');
-    setActiveCreatorFilter('');
-    
-    // Загружаем данные без фильтров
-    loadApplications();
-  };
 
   const handleViewApplication = (applicationId: number) => {
     navigate(`${ROUTES.APPLICATIONS}/${applicationId}`);

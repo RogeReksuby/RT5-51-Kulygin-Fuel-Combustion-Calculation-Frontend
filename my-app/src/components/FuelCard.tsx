@@ -27,7 +27,7 @@ export const FuelCard: FC<Props> = ({
   const dispatch = useDispatch<AppDispatch>();
   
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
-  const { loading: combustionsLoading, error: combustionsError } = useSelector((state: RootState) => state.combustions);
+  const { loading: combustionsLoading } = useSelector((state: RootState) => state.combustions);
 
   const handleAddToApplication = async () => {
     if (!isAuthenticated) {

@@ -20,11 +20,6 @@ const initialState: FuelsState = {
 
 // ============ THUNKS ============
 
-// store/slices/fuelsSlice.ts
-
-// 1. Получить список топлива
-// store/slices/fuelsSlice.ts
-
 // 1. Получить список топлива
 export const getFuelsList = createAsyncThunk(
   'fuels/getList',

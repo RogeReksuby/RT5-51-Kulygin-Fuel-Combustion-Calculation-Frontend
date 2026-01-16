@@ -21,7 +21,7 @@
 export const BASE_URL = 'http://localhost:8080'
 export const API_BASE_URL = BASE_URL; // Прямой URL к твоему бекенду
 export const IMAGE_BASE_URL = BASE_URL + '/minio';
-export const BASE_PATH = '/web_rip_front';
+export const BASE_PATH = '/RT5-51-Kulygin-Fuel-Combustion-Calculation-Frontend';
 
 export const transformImageUrl = (imagePath: string | null | undefined): string | null => {
   // Проверяем что imagePath существует и это строка

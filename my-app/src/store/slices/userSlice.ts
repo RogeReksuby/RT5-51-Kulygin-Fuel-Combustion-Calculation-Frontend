@@ -275,6 +275,7 @@ const userSlice = createSlice({
         console.log('Авторизация при загрузке успешна (не должно происходить)');
       })
       .addCase(checkInitialAuth.rejected, (state, action) => {
+        console.log(action)
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
@@ -297,6 +298,7 @@ const userSlice = createSlice({
         console.log('✅ Авторизация проверена успешно');
       })
       .addCase(verifyAuth.rejected, (state, action) => {
+        console.log(action)
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;

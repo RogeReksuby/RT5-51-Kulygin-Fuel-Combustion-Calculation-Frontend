@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import type { AppDispatch, RootState } from '../store';
 import { 
   checkInitialAuth, 
-  verifyAuth,
+  //verifyAuth,
   setAppInitialized 
 } from '../store/slices/userSlice';
 import { getCombustionCartCount } from '../store/slices/applicationsSlice';

@@ -12,8 +12,7 @@ import FuelCombustionsList from "./pages/FuelCombustionsList";
 import "./App.css";
 import ProfilePage from "./pages/ProfilePge";
 import RegisterPage from "./pages/RegisterPage";
-// Импортируем ProtectedRoute если используете
-// import ProtectedRoute from "./components/ProtectedRoute";
+
 
 function App() {
   return (
