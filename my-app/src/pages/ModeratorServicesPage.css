@@ -1,0 +1,250 @@
+/* ModeratorServicesPage.css */
+.moderator-services-container {
+    padding: 20px 40px;
+    font-family: 'Manrope', sans-serif;
+    color: #203563;
+}
+
+.services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.services-title {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 49px;
+    color: #203563;
+    margin: 0;
+}
+
+.services-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-input {
+    box-sizing: border-box;
+    padding: 10px 15px;
+    border: 2px solid #203563;
+    border-radius: 5px;
+    font-family: 'Manrope';
+    font-size: 16px;
+    min-width: 250px;
+    background: transparent;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #0F94CF;
+}
+
+.create-button {
+    background: #0F94CF;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-family: 'Manrope';
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.create-button:hover {
+    background: #0d7bb0;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.loading, .empty-state {
+    text-align: center;
+    padding: 60px;
+    font-size: 18px;
+    color: #666;
+}
+
+.services-table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.services-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Manrope', sans-serif;
+}
+
+.services-table thead {
+    background: #203563;
+}
+
+.services-table th {
+    padding: 16px 12px;
+    text-align: left;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.services-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s;
+}
+
+.services-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.services-table td {
+    padding: 16px 12px;
+    vertical-align: middle;
+}
+
+/* Стили для ячеек */
+.image-cell {
+    width: 80px;
+}
+
+.service-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #ddd;
+}
+
+.title-cell {
+    min-width: 200px;
+}
+
+.service-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.service-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.heat-cell, .mass-cell, .density-cell {
+    font-weight: 600;
+    color: #203563;
+}
+
+.type-cell {
+    text-align: center;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.deleted {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.actions-cell {
+    width: 200px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-button, .delete-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Manrope';
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.edit-button {
+    background: #28a745;
+    color: white;
+}
+
+.edit-button:hover {
+    background: #218838;
+}
+
+.delete-button {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-button:hover {
+    background: #c82333;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .moderator-services-container {
+        padding: 20px;
+    }
+    
+    .services-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .services-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .search-input {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .services-table {
+        font-size: 14px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .edit-button, .delete-button {
+        width: 100%;
+    }
+}

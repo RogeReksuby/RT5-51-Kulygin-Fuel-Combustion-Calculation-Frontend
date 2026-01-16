@@ -15,8 +15,11 @@ export const Header: FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Получаем данные из Redux store
-    const { /*user,*/ isAuthenticated } = useSelector((state: RootState) => state.user);
+    const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
     const { cart } = useSelector((state: RootState) => state.combustions);
+
+    // Проверяем, является ли пользователь модератором
+    const isModerator = user?.is_moderator;
 
     // Обработчик выхода из системы
     const handleLogout = async () => {
@@ -55,7 +58,15 @@ export const Header: FC = () => {
                     {/* КНОПКИ ДЛЯ АВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ */}
                     {isAuthenticated ? (
                         <>
-                            
+                            {/* ПАНЕЛЬ МОДЕРАТОРА - ТОЛЬКО ДЛЯ МОДЕРАТОРОВ */}
+                            {isModerator && (
+                                <button 
+                                className="bButton moderator-button"
+                                onClick={() => navigate(ROUTES.MODERATOR_SERVICES)}
+                                >
+                                Панель инженера
+                                </button>
+                            )}
                             
                             {/* МОИ ЗАЯВКИ */}
                             <button 

@@ -24,8 +24,11 @@ export const Header: FC<HeaderProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Получаем данные из Redux store
-  const { /*user, */isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
   const { cart } = useSelector((state: RootState) => state.combustions);
+
+  // Проверяем, является ли пользователь модератором
+  const isModerator = user?.is_moderator;
 
   // Обработчик выхода из системы
   const handleLogout = async () => {
@@ -71,7 +74,15 @@ export const Header: FC<HeaderProps> = ({
               {/* КНОПКИ ДЛЯ АВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ */}
               {isAuthenticated ? (
                 <>
-                  
+                  {/* ПАНЕЛЬ МОДЕРАТОРА - ТОЛЬКО ДЛЯ МОДЕРАТОРОВ */}
+                  {isModerator && (
+                    <button 
+                      className="bButton moderator-button"
+                      onClick={() => navigate(ROUTES.MODERATOR_SERVICES)}
+                    >
+                      Панель инженера
+                    </button>
+                  )}
                   
                   {/* МОИ ЗАЯВКИ */}
                   <button 
@@ -93,8 +104,6 @@ export const Header: FC<HeaderProps> = ({
                   >
                       Выйти
                   </button>
-
-
                 </>
               ) : (
                 /* КНОПКА ВХОДА ДЛЯ НЕАВТОРИЗОВАННЫХ */
@@ -142,6 +151,19 @@ export const Header: FC<HeaderProps> = ({
                   {/* МОБИЛЬНЫЕ КНОПКИ АВТОРИЗАЦИИ */}
                   {isAuthenticated ? (
                     <>
+                      {/* ПАНЕЛЬ МОДЕРАТОРА ДЛЯ МОБИЛЬНЫХ */}
+                      {isModerator && (
+                        <button 
+                          className="dropdown-item"
+                          onClick={() => {
+                            navigate(ROUTES.MODERATOR_SERVICES);
+                            setIsMenuOpen(false);
+                          }}
+                        >
+                          Панель модератора
+                        </button>
+                      )}
+                      
                       {cart.app_id && (
                         <button 
                           className="dropdown-item"

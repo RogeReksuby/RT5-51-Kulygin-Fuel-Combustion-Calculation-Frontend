@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../api';
 import type { Fuel } from '../../modules/types';
+import type { RootState } from '../../store';
 
 // Состояние топлива
 interface FuelsState {
@@ -166,12 +167,70 @@ const fuelsSlice = createSlice({
         state.error = action.payload as string;
       })
       
+      // Создание топлива
+      .addCase(createFuel.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createFuel.fulfilled, (state, action) => {
+        state.loading = false;
+        // Добавляем новое топливо в список
+        if (action.payload?.data) {
+          state.fuels.push(action.payload.data);
+        }
+      })
+      .addCase(createFuel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      
+      // Обновление топлива
+      .addCase(updateFuel.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateFuel.fulfilled, (state, action) => {
+        state.loading = false;
+        // Обновляем топливо в списке
+        if (action.payload?.data) {
+          const index = state.fuels.findIndex(fuel => fuel.id === action.payload.data.id);
+          if (index !== -1) {
+            state.fuels[index] = action.payload.data;
+          }
+        }
+      })
+      .addCase(updateFuel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      
       // Удаление топлива
       .addCase(deleteFuel.fulfilled, (state, action) => {
-        state.fuels = state.fuels.filter(fuel => fuel.id !== action.payload.id);
+        // Удаляем топливо из списка (или помечаем как удаленное)
+        const index = state.fuels.findIndex(fuel => fuel.id === action.payload.id);
+        if (index !== -1) {
+          // Мягкое удаление - помечаем флагом
+          state.fuels[index] = { ...state.fuels[index], is_delete: true };
+        }
+      })
+      .addCase(deleteFuel.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
+
+// ============ SELECTORS ============
+
+export const selectFuels = (state: RootState) => state.fuels.fuels;
+export const selectCurrentFuel = (state: RootState) => state.fuels.currentFuel;
+export const selectFuelsLoading = (state: RootState) => state.fuels.loading;
+export const selectFuelsError = (state: RootState) => state.fuels.error;
+
+// Селектор для активных (не удаленных) видов топлива
+export const selectActiveFuels = (state: RootState) => 
+  state.fuels.fuels.filter(fuel => !fuel.is_delete);
+
+// Селектор для удаленных видов топлива
+export const selectDeletedFuels = (state: RootState) => 
+  state.fuels.fuels.filter(fuel => fuel.is_delete);
 
 export const { 
   clearError, 

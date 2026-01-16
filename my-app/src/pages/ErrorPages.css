@@ -1,0 +1,136 @@
+/* ErrorPages.css - в стиле Manrope как у тебя */
+
+.error-page-container {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: 'Manrope', sans-serif;
+}
+
+.error-content {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.error-code {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 120px;
+    line-height: 130px;
+    color: #203563;
+    margin: 0;
+}
+
+.error-title {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 49px;
+    color: #203563;
+    margin: 20px 0;
+}
+
+.error-message {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 27px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.error-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.error-button {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 32px;
+    background: #0F94CF;
+    border-radius: 5px;
+    border: none;
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    color: #FFFFFF;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.error-button:hover {
+    background: #0d7bb0;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.error-button.secondary {
+    background: #6c757d;
+}
+
+.error-button.secondary:hover {
+    background: #545b62;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 80px;
+        line-height: 90px;
+    }
+    
+    .error-title {
+        font-size: 28px;
+        line-height: 38px;
+    }
+    
+    .error-message {
+        font-size: 18px;
+        line-height: 24px;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .error-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-code {
+        font-size: 60px;
+        line-height: 70px;
+    }
+    
+    .error-title {
+        font-size: 24px;
+        line-height: 32px;
+    }
+    
+    .error-message {
+        font-size: 16px;
+        line-height: 22px;
+    }
+}
